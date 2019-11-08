@@ -11,10 +11,28 @@ body
 
 .horizontal-nav
 {
-	
+	width: 80%;
+	margin-left: 10%;
+}
+
+.horizontal-nav ul
+{
+	margin-left: 65%;
 }
 
 .horizontal-nav ul li
+{
+	list-style-type: none;
+	float: left;
+	margin-left: 20px;
+}
+
+#page-content
+{
+	float: clear;
+}
+
+footer
 {
 	float: clear;
 }
