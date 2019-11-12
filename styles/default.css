@@ -1,0 +1,29 @@
+body
+{
+	margin: 0px;
+	padding: 0px;
+	
+	background-color: black;
+	color: white;
+}
+
+header
+{
+	display: inline-block;
+}
+
+nav ul li
+{
+	display: inline-block;
+	list-style-type: none;
+}
+
+nav ul li a
+{
+	color: white;
+}
+
+nav ul li a:active
+{
+	color: purple;
+}
