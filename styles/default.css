@@ -1,3 +1,5 @@
+/* General CSS rules for every viewport, including large desktop screens */
+/* Original layout found -> https://marksheet.io/css-responsiveness.html*/
 body
 {
 	margin: 0px;
@@ -7,23 +9,41 @@ body
 	color: white;
 }
 
-header
+.title{}
+.button{}
+@media(max-width: 1920px)
 {
-	display: inline-block;
+	/* Rules for standard 1920x1080 viewports */
+	header
+	{
+		display: inline-block;
+	}
+
+	nav ul li
+	{
+		display: inline-block;
+		list-style-type: none;
+	}
+
+	nav ul li a
+	{
+		color: white;
+	}
+
+	nav ul li a:active
+	{
+		color: purple;
+	}
 }
 
-nav ul li
-{
-	display: inline-block;
-	list-style-type: none;
+@media (max-width: 1200px) {
+  /* Rules for laptops, small desktop screens, and smaller viewports */
 }
 
-nav ul li a
-{
-	color: white;
+@media (max-width: 991px) {
+  /* Rules for tablets and smaller viewports */
 }
 
-nav ul li a:active
-{
-	color: purple;
+@media (max-width: 767px) {
+  /* Rules for smartphones only */
 }
