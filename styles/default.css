@@ -1,17 +1,29 @@
 /* General CSS rules for every viewport, including large desktop screens */
 /* Original layout found -> https://marksheet.io/css-responsiveness.html*/
-body
-{
+
+body{	
 	margin: 0px;
 	padding: 0px;
 	
 	background-color: black;
 	color: white;
 }
+.title{ }
+.button{ }
 
-.title{}
-.button{}
-@media(max-width: 1920px)
+@media (min-width: 768px) {
+  /* Rules for tablets and bigger viewports */
+}
+
+@media (min-width: 992px) {
+  /* Rules for laptops, small desktop screens and bigger viewports */
+}
+
+@media (min-width: 1200px) {
+  /* Rules for larger desktop screens only */
+}
+
+@media(min-width: 1920px)
 {
 	/* Rules for standard 1920x1080 viewports */
 	header
@@ -34,16 +46,4 @@ body
 	{
 		color: purple;
 	}
-}
-
-@media (max-width: 1200px) {
-  /* Rules for laptops, small desktop screens, and smaller viewports */
-}
-
-@media (max-width: 991px) {
-  /* Rules for tablets and smaller viewports */
-}
-
-@media (max-width: 767px) {
-  /* Rules for smartphones only */
 }
