@@ -161,11 +161,11 @@ var G = function()
 
 		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderBase.bmp")
 			PS.imageBlit(image, defender.x - 2, defender.y+1);
-		if(image.source === "images/defenderBotMid.bmp")
+		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderBotMid.bmp")
 			PS.imageBlit(image, defender.x - 2, defender.y);
-		if(image.source === "images/defenderTopMid.bmp")
+		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderTopMid.bmp")
 			PS.imageBlit(image, defender.x - 1, defender.y - 1);
-		if(image.source === "images/defenderTop.bmp")
+		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderTop.bmp")
 			PS.imageBlit(image, defender.x  - 0, defender.y - 2);
 
 		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/Shot.bmp")
