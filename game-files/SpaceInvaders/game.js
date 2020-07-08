@@ -156,10 +156,10 @@ var G = function()
 	var myLoader = function(image)
 	{
 		var i;
-		if(image.source === "images/BackGround.bmp")
+		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/BackGround.bmp")
 			PS.imageBlit(image, 0, 0);
 
-		if(image.source === "images/defenderBase.bmp")
+		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderBase.bmp")
 			PS.imageBlit(image, defender.x - 2, defender.y+1);
 		if(image.source === "images/defenderBotMid.bmp")
 			PS.imageBlit(image, defender.x - 2, defender.y);
@@ -168,7 +168,7 @@ var G = function()
 		if(image.source === "images/defenderTop.bmp")
 			PS.imageBlit(image, defender.x  - 0, defender.y - 2);
 
-		if(image.source === "images/Shot.bmp")
+		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/Shot.bmp")
 		{
 			for(i = 0; i < shots.length; i++)
 			{
@@ -176,7 +176,7 @@ var G = function()
 			}
 		}
 
-		if(image.source === "images/UfoBase.bmp")
+		if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/UfoBase.bmp")
 		{
 			for(i = 0; i < ufos.length; i++)
 			{
@@ -184,7 +184,7 @@ var G = function()
 			}
 		}
 
-        if(image.source === "images/UfoMid.bmp")
+        if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/UfoMid.bmp")
         {
             for(i = 0; i < ufos.length; i++)
             {
@@ -192,7 +192,7 @@ var G = function()
             }
         }
 
-        if(image.source === "images/UfoTop.bmp")
+        if(image.source === "https://pjmanley671.github.io/game-files/SpaceInvaders/images/UfoTop.bmp")
         {
         	for(i = 0; i < ufos.length; i++)
         	{
@@ -226,18 +226,18 @@ var G = function()
 
 			drawMap : function() // draws the current instance of the game.
 			{
-				PS.imageLoad("images/BackGround.bmp", myLoader, 1);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/BackGround.bmp", myLoader, 1);
 				
-				PS.imageLoad("images/defenderBase.bmp", myLoader, 2);
-				PS.imageLoad("images/defenderBotMid.bmp", myLoader, 2);
-				PS.imageLoad("images/defenderTopMid.bmp", myLoader, 2);
-				PS.imageLoad("images/defenderTop.bmp", myLoader, 2);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderBase.bmp", myLoader, 2);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderBotMid.bmp", myLoader, 2);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderTopMid.bmp", myLoader, 2);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/defenderTop.bmp", myLoader, 2);
 
-				PS.imageLoad("images/Shot.bmp", myLoader, 2);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/Shot.bmp", myLoader, 2);
 
-				PS.imageLoad("images/UfoBase.bmp", myLoader, 2);
-				PS.imageLoad("images/UfoMid.bmp", myLoader, 2);
-				PS.imageLoad("images/UfoTop.bmp", myLoader, 2);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/UfoBase.bmp", myLoader, 2);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/UfoMid.bmp", myLoader, 2);
+				PS.imageLoad("https://pjmanley671.github.io/game-files/SpaceInvaders/images/UfoTop.bmp", myLoader, 2);
 
 			},
 
