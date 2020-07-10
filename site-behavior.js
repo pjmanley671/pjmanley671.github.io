@@ -25,20 +25,17 @@
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click(); */
 
-window.onload = function()
+function Load()
 {
-	message.innerHTML = "test";
 	//document.getElementById("page-name") = "test";
 	try
 	{
-		document.getElementById("page-name").textContent = "test";
+		document.getElementById("page-name").text = "Paul Manley - Portfolio";
+		if(document.getElementById("page-name").text != "Paul Manley - Portfolio")
+			throw "page-name not set to Paul Manley - Portfolio";
+		
 	}catch(err)
 	{
-		message.innerHTML = err;
+		alert(err);
 	}
-}
-
-function loadPage()
-{
-	message.innerHTML = "test";
 }
