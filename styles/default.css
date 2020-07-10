@@ -1,5 +1,5 @@
 /* General CSS rules for every viewport, including large desktop screens */
-/* Original layout found -> https://marksheet.io/css-responsiveness.html*/
+/* Original layout found -> https://marksheet.io/css-responsiveness.html */
 
 body{	
 	margin: 0px;
@@ -11,39 +11,48 @@ body{
 .title{ }
 .button{ }
 
-@media (min-width: 768px) {
-  /* Rules for tablets and bigger viewports */
+@media (min-width: 768px) 
+{  /* Rules for tablets and bigger viewports */
+	
 }
 
-@media (min-width: 992px) {
-  /* Rules for laptops, small desktop screens and bigger viewports */
+@media (min-width: 992px) 
+{  /* Rules for laptops, small desktop screens and bigger viewports */
+	
 }
 
-@media (min-width: 1200px) {
-  /* Rules for larger desktop screens only */
+@media (min-width: 1200px) 
+{  /* Rules for larger desktop screens only */
+	
 }
 
 @media(min-width: 1920px)
+{  /* Rules for standard 1920x1080 viewports and greater */
+	.nav
+	{
+		position: fixed;
+		z-index: 1;
+	}
+}
+
+/* Debug Mode */
+body
 {
-	/* Rules for standard 1920x1080 viewports */
-	header
-	{
-		display: inline-block;
-	}
+	border-style: solid;
+	border-width: 1px;
+	border-color: red;
+}
 
-	nav ul li
-	{
-		display: inline-block;
-		list-style-type: none;
-	}
+header
+{
+	border-style: solid;
+	border-width: 1px;
+	border-color: red;
+}
 
-	nav ul li a
-	{
-		color: white;
-	}
-
-	nav ul li a:active
-	{
-		color: purple;
-	}
+.nav
+{
+	border-style: solid;
+	border-width: 1px;
+	border-color: red;
 }
