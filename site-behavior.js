@@ -1,6 +1,30 @@
+function CreateNav()
+{
+	var listObject = document.createElement("ul");
+	document.getElementById("nav").appendChild(listObject);
+	listObject.appendChild(document.createElement("li"));
+}
+
+function PageLoad()
+{
+	try
+	{
+		document.getElementById("page-name").text = "Paul Manley - Portfolio";
+		if(document.getElementById("page-name").text != "Paul Manley - Portfolio")
+			throw "page-name not set to Paul Manley - Portfolio";
+	}catch(err)
+	{
+		alert(err);
+	}
+	
+	CreateNav();
+}
+
 /*function openPage(pageName, elmnt, color) 
 {
 	//https://www.w3schools.com/howto/howto_js_full_page_tabs.asp
+	//http://davidbau.com/encode/seedrandom.js
+	//https://stackoverflow.com/questions/2117046/how-to-show-live-preview-in-a-small-popup-of-linked-page-on-mouse-over-on-link
 	// Hide all elements with class="tabcontent" by default 
 	
 	var i, tabcontent, tablinks;
@@ -24,18 +48,3 @@
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click(); */
-
-function Load()
-{
-	//document.getElementById("page-name") = "test";
-	try
-	{
-		document.getElementById("page-name").text = "Paul Manley - Portfolio";
-		if(document.getElementById("page-name").text != "Paul Manley - Portfolio")
-			throw "page-name not set to Paul Manley - Portfolio";
-		
-	}catch(err)
-	{
-		alert(err);
-	}
-}
