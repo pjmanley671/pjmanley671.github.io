@@ -12,6 +12,8 @@ function PageLoad()
 		document.getElementById("page-name").text = "Paul Manley - Portfolio";
 		if(document.getElementById("page-name").text != "Paul Manley - Portfolio")
 			throw "page-name not set to Paul Manley - Portfolio";
+		
+		
 	}catch(err)
 	{
 		alert(err);
