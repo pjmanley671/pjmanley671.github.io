@@ -38,24 +38,35 @@ nav ul
 	padding: 0;
 }
 
-#Game-Nav ul
+#SideNav ul
 {
 	display: none;
 }
 
 @media (min-width: 768px) 
 {  /* Rules for tablets and bigger viewports */
-	#Game-Nav
+
+	#Home-Row
 	{
 		position: fixed;
+		padding: 0%;
+		width: 100%;
+	}
+	#SideNav
+	{
+		position: relative;
 		z-index: 1;
 		padding-left: 0px;
 	}
 
-	#Game-Nav ul
+	#SideNav ul
 	{
 		display: inline-block;
 	}
+/* 	#SideNav li a:hover
+	{
+		animation: SideNavHover 1s ease-in 0s 1 normal forwards; 
+	} */
 }
 
 @media (min-width: 992px) 
@@ -71,4 +82,21 @@ nav ul
 @media(min-width: 1919px)
 {  /* Rules for standard 1920x1080 viewports and greater */
 	
+}
+
+@keyframes SideNavHover {
+	0% {background-color: black;}
+	30%
+	{
+		box-shadow: 2px 0px 5px 2px cyan inset;
+		background-color: blue;
+	}
+	60% {
+		background-color: white;
+		
+	}
+	100%
+	{
+		box-shadow: 2px 0px 5px 2px cyan inset;
+	}
 }

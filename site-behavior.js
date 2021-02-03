@@ -1,11 +1,17 @@
-function FillGameNav()
+
+
+function FillSideAsGameNav()
 {
-	let links = 
+	fetch("data/Browser-Projects.json").then(response => 
+		{
+			console.log(response);
+		});
+/* 	let links = 
 	[
-		["Perlenspiel - Color Lock", "pages/ColorLock.html"],
-		["Perlenspiel - Sliding Puzzle", "pages/SlidingPuzzle.html"],
-		["Perlenspiel - Space Invaders", "pages/SpaceInvaders.html"]
-	];
+		["Color Lock", "pages/ColorLock.html"],
+		["Sliding Puzzle", "pages/SlidingPuzzle.html"],
+		["Space Invaders", "pages/SpaceInvaders.html"]
+	]; */
 	var listObject = document.createElement("ul");
 	var i = 0;
 
@@ -18,8 +24,12 @@ function FillGameNav()
 	for(var l of links)
 	{
 		var a = document.createElement("a");
-		a.innerHTML = l[0];
+		var i = document.createElement("img");
+		i.alt = l[0];
 		a.href = l[1];
+		i.src = null;
+		a.appendChild(i);
+		
 		
 		var r = 0;
 		do
@@ -30,20 +40,21 @@ function FillGameNav()
 		listObject.children[r].appendChild(a);
 	}
 
-	document.getElementById("Game-Nav").appendChild(listObject);
+	document.getElementById("SideNav").appendChild(listObject);
 }
 
 function PageLoad()
 {
+	document.getElementById("SideNav").innerHTML = '';
+
 	switch(document.getElementById("page-name").innerHTML)
 	{
 		case "Paul Manley - Portfolio":
+			FillSideAsGameNav();
 			break;
 		default:
 			break;
 	}
-	
-	FillGameNav();
 	// location.reload();
 }
 
@@ -75,3 +86,26 @@ function PageLoad()
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click(); */
+
+// Checks to see if this is the first visit this web session.
+/* var CheckFirstVisit = () => Boolean
+{
+	var name = "First" + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i < ca.length; i++)
+	{
+		var c = ca [i];
+		while(c.charAt(0) == ' ')
+		{
+			c = c.substring(1);
+		}
+
+		if(c.indexOf(name) == 0)
+		{
+			return true;
+			// return c.substring(name.length, c.length);
+		}
+	}
+	return false;
+} */
