@@ -1,5 +1,16 @@
 {
-    "Color Lock" : "pages/ColorLock.html",
-    "Sliding Puzzle" : "pages/SlidingPuzzle.html",
-    "Space Invaders" : "pages/SpaceInvaders.html"
+    "links" : [
+        {
+            "name": "Color Lock",
+            "link": "pages/ColorLock.html"
+        },
+        {
+            "name": "Sliding Puzzle",
+            "link": "pages/SlidingPuzzle.html"
+        },
+        {
+            "name": "Space Invaders",
+            "link": "pages/SpaceInvaders.html"
+        }
+    ]
 }

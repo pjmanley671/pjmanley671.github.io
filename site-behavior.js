@@ -1,17 +1,20 @@
-
+async function GetJson(url)
+{
+	const response = await fetch("https://cors-anywhere.herokuapp.com/" + url);
+	const data = await response.json();
+	return data;
+}
 
 function FillSideAsGameNav()
 {
-	fetch("data/Browser-Projects.json").then(response => 
-		{
-			console.log(response);
-		});
-/* 	let links = 
+	//var li = GetJson("https://pjmanley671.github.io/data/Browser-Projects.json");
+
+	let links = 
 	[
 		["Color Lock", "pages/ColorLock.html"],
 		["Sliding Puzzle", "pages/SlidingPuzzle.html"],
 		["Space Invaders", "pages/SpaceInvaders.html"]
-	]; */
+	];
 	var listObject = document.createElement("ul");
 	var i = 0;
 
