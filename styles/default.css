@@ -1,46 +1,21 @@
 /* General CSS rules for every viewport, including large desktop screens */
 /* Original layout found -> https://marksheet.io/css-responsiveness.html */
 
-body{	
+body {	
 	margin: 0px;
 	padding: 0px;
 	
 	background-color: black;
 	color: white;
-}
-.title{ }
-.button{ }
 
-@media (min-width: 768px) 
-{  /* Rules for tablets and bigger viewports */
-	
-}
-
-@media (min-width: 992px) 
-{  /* Rules for laptops, small desktop screens and bigger viewports */
-	
-}
-
-@media (min-width: 1200px) 
-{  /* Rules for larger desktop screens only */
-	
-}
-
-@media(min-width: 1920px)
-{  /* Rules for standard 1920x1080 viewports and greater */
-	.nav
-	{
-		position: fixed;
-		z-index: 1;
-	}
-}
-
-/* Debug Mode */
-body
-{
 	border-style: solid;
 	border-width: 1px;
 	border-color: red;
+}
+a 
+{
+	text-decoration: none;
+	color: white;
 }
 
 header
@@ -50,9 +25,50 @@ header
 	border-color: red;
 }
 
-.nav
+nav
 {
 	border-style: solid;
 	border-width: 1px;
 	border-color: red;
+}
+
+nav ul
+{
+	list-style-type: none;
+	padding: 0;
+}
+
+#Game-Nav ul
+{
+	display: none;
+}
+
+@media (min-width: 768px) 
+{  /* Rules for tablets and bigger viewports */
+	#Game-Nav
+	{
+		position: fixed;
+		z-index: 1;
+		padding-left: 0px;
+	}
+
+	#Game-Nav ul
+	{
+		display: inline-block;
+	}
+}
+
+@media (min-width: 992px) 
+{  /* Rules for laptops, small desktop screens and bigger viewports */
+
+}
+
+@media (min-width: 1200px) 
+{  /* Rules for larger desktop screens only */
+	
+}
+
+@media(min-width: 1919px)
+{  /* Rules for standard 1920x1080 viewports and greater */
+	
 }

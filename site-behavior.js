@@ -1,25 +1,50 @@
-function CreateNav()
+function FillGameNav()
 {
+	let links = 
+	[
+		["Perlenspiel - Color Lock", "pages/ColorLock.html"],
+		["Perlenspiel - Sliding Puzzle", "pages/SlidingPuzzle.html"],
+		["Perlenspiel - Space Invaders", "pages/SpaceInvaders.html"]
+	];
 	var listObject = document.createElement("ul");
-	document.getElementById("nav").appendChild(listObject);
-	listObject.appendChild(document.createElement("li"));
+	var i = 0;
+
+	while (i < links.length)
+	{
+		listObject.appendChild(document.createElement("li"));
+		i++;
+	}
+
+	for(var l of links)
+	{
+		var a = document.createElement("a");
+		a.innerHTML = l[0];
+		a.href = l[1];
+		
+		var r = 0;
+		do
+		{
+			r = Math.floor(Math.random() * listObject.children.length);
+		}while(listObject.children[r].hasChildNodes());
+
+		listObject.children[r].appendChild(a);
+	}
+
+	document.getElementById("Game-Nav").appendChild(listObject);
 }
 
 function PageLoad()
 {
-	try
+	switch(document.getElementById("page-name").innerHTML)
 	{
-		document.getElementById("page-name").text = "Paul Manley - Portfolio";
-		if(document.getElementById("page-name").text != "Paul Manley - Portfolio")
-			throw "page-name not set to Paul Manley - Portfolio";
-		
-		
-	}catch(err)
-	{
-		alert(err);
+		case "Paul Manley - Portfolio":
+			break;
+		default:
+			break;
 	}
 	
-	CreateNav();
+	FillGameNav();
+	// location.reload();
 }
 
 /*function openPage(pageName, elmnt, color) 
