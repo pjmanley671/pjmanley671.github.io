@@ -1,19 +1,22 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 	<head>
-		<html lang="en">
 		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="styles/default.css"/>
 		<title id="page-name">Paul Manley - Portfolio</title>
+		<script type="module"> import { Octokit } from "https://cdn.skypack.dev/@octokit/core"; export const octokit = new Octokit(); console.log(octokit); </script> 
 		<script type="text/javascript" src="site-behavior.js"></script>
 	</head>
 	
 	<body onload="PageLoad()">
+		<nav id="top-nav"></nav>
 		<header></header>
-		<nav id="Home-Row"></nav>
-		<nav id="SideNav"></nav>
-		
-		<div id="page-content"></div>
+		<section id="page-content"></section>
+		<aside>
+			<canvas id="GitHubCanvas"></canvas>
+			<nav id="side-nav"></nav>
+		</aside>
 	</body>
 </html>
 

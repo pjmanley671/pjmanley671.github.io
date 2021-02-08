@@ -1,102 +1,35 @@
-/* General CSS rules for every viewport, including large desktop screens */
-/* Original layout found -> https://marksheet.io/css-responsiveness.html */
-
-body {	
-	margin: 0px;
-	padding: 0px;
-	
-	background-color: black;
-	color: white;
-
-	border-style: solid;
-	border-width: 1px;
-	border-color: red;
-}
-a 
+body, body *
 {
-	text-decoration: none;
-	color: white;
+	margin: 0;
+	padding: 0;
+	width: auto;
+	height: auto;
+
+	background-color: white;
+	color: black;
+
+	font-family: sans-serif;
 }
 
-header
+body, nav, header, section
 {
-	border-style: solid;
-	border-width: 1px;
-	border-color: red;
+	border: 1px solid red;
 }
 
-nav
-{
-	border-style: solid;
-	border-width: 1px;
-	border-color: red;
-}
-
-nav ul
+ul
 {
 	list-style-type: none;
-	padding: 0;
 }
 
-#SideNav ul
+a
 {
-	display: none;
+	text-decoration: none;
+	color: black;
 }
 
-@media (min-width: 768px) 
-{  /* Rules for tablets and bigger viewports */
-
-	#Home-Row
-	{
-		position: fixed;
-		padding: 0%;
-		width: 100%;
-	}
-	#SideNav
-	{
-		position: relative;
-		z-index: 1;
-		padding-left: 0px;
-	}
-
-	#SideNav ul
-	{
-		display: inline-block;
-	}
-/* 	#SideNav li a:hover
-	{
-		animation: SideNavHover 1s ease-in 0s 1 normal forwards; 
-	} */
-}
-
-@media (min-width: 992px) 
-{  /* Rules for laptops, small desktop screens and bigger viewports */
-
-}
-
-@media (min-width: 1200px) 
-{  /* Rules for larger desktop screens only */
-	
-}
-
-@media(min-width: 1919px)
-{  /* Rules for standard 1920x1080 viewports and greater */
-	
-}
-
-@keyframes SideNavHover {
-	0% {background-color: black;}
-	30%
-	{
-		box-shadow: 2px 0px 5px 2px cyan inset;
-		background-color: blue;
-	}
-	60% {
-		background-color: white;
-		
-	}
-	100%
-	{
-		box-shadow: 2px 0px 5px 2px cyan inset;
-	}
+canvas
+{
+	width: 480px;
+	height: 240px;
+	border: 1px solid blueviolet;
 }
