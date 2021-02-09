@@ -1,30 +1,53 @@
-let mainObj = {};
+var thisDate = new Date();
 
-let fillTable = function()
+function TableCommit(commits = {}, repo)
 {
 	var i = 0;
-	var dateObj = new Date();
-	for(let repo in mainObj)
+	for(cmt in commits)
 	{
-		if(mainObj[repo].pushed_at.slice(0, 4) == dateObj.getFullYear())
+		if(commits[cmt].commit.author.date.slice(0, 4) == thisDate.getFullYear())
 		{
+			i++;
+			// console.log(commits[cmt].commit.author.date.slice(5, 7));
+			//document.getElementById("chart").children;
+		}
+	}
+	let childs = document.getElementById("table-details").children;
+	let repoChild = childs[repo].children;
+	repoChild[2].innerHTML = i;
+}
+
+function fillTable(pUser = {})
+{
+	var i = 0;
+	for(let repo in pUser)
+	{
+		if(pUser[repo].pushed_at.slice(0, 4) == thisDate.getFullYear())
+		{
+			i++;
+			/* Initializes this entry for the table */
 			let tableColumns = [];
 			var tableRow = document.createElement("tr");
 			
- 			for(j = 0; j < 3; j++) tableColumns.push(document.createElement("td"));
-
+			for(j = 0; j < 3; j++) tableColumns.push(document.createElement("td"));
+			
+			/* Stores the link to the repository and the repository name */
 			var a = document.createElement("a");
-			a.href = mainObj[repo].html_url;
-			a.innerHTML = mainObj[repo].name;
+			a.href = pUser[repo].html_url;
+			a.innerHTML = pUser[repo].name;
 
-			tableColumns[0].appendChild(a);
-			tableColumns[1].innerHTML = " ";
-			tableColumns[2].innerHTML = mainObj[repo].pushed_at.split('T')[0];
+			/* Inserts all the stored data and links to the appropriate position in the table. */
+			tableColumns[0].innerHTML = pUser[repo].pushed_at.split('T')[0];
+			tableColumns[1].appendChild(a);
+			tableColumns[2].innerHTML = " ";
 
 			for(j = 0; j < tableColumns.length; j++) tableRow.appendChild(tableColumns[j]);
 
 			document.getElementById("table-details").appendChild(tableRow);
-			i++;
+
+			fetch(pUser[repo].commits_url.slice(0, pUser[repo].commits_url.length - 6))
+				.then(response => {return response.json()})
+				.then(data => TableCommit(data, i));
 		}
 	}
 }
@@ -32,15 +55,8 @@ let fillTable = function()
 function GetRepos(url='')
 {
 	fetch(url)
-		.then(function(resp)
-		{
-			return resp.json();
-		})
-		.then(function(data)
-		{
-			mainObj = data;
-			fillTable();
-		});
+	.then(response => {return response.json()})
+	.then(data => fillTable(data));
 }
 function PageLoad()
 {
@@ -48,20 +64,8 @@ function PageLoad()
 	{
 		case "Paul Manley - Portfolio":
 			GetRepos('https://api.github.com/users/pjmanley671/repos');
-			console.log(document.getElementById("chart").clientWidth)
 			break;
 		default:
 			break;
 	}
 }
-
-/*
- * html_url
- * commits[].author.name
- * 					.date
- * 
- * 
- * "2018-08-23T19:57:49Z"
- * "2018-08-23T19:57:49Z"
- * "2018-02-14T19:12:10Z"
- */
