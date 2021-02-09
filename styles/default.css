@@ -11,7 +11,7 @@ body, body *
 	font-family: sans-serif;
 }
 
-body, nav, header, section, svg
+body, nav, header, section, svg, table, th, td
 {
 	border: 1px solid red;
 }
@@ -25,4 +25,15 @@ a
 {
 	text-decoration: none;
 	color: black;
+}
+
+svg
+{
+	width: 480px;
+	height: 240px;
+}
+
+table
+{
+	width: 480px;
 }
