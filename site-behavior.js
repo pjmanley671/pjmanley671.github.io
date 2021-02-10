@@ -1,30 +1,35 @@
 var thisDate = new Date();
 
+// https://stackoverflow.com/questions/10087819/convert-date-to-another-timezone-in-javascript
+function convertTZ(date, tzString) {
+    return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+}
+
 function TableCommit(commits = {}, repo)
 {
-	var i = 0;
+	var i = 0, xoffset = 30, months = 12, goal = 10;
 	var svg = document.getElementById("chart");
 	var points = svg.children;
-	var xoffset = 30;
-	var months = 12;
-	var goal = 10;
 	for(p = 0; p < points.length; p++)
-	{
+	{ // Resets the position of points to fit into the baseline positions of the chart.
 		points[p].setAttribute("cx", String((svg.clientWidth / months) * p + (svg.clientWidth / xoffset)));
 		points[p].setAttribute("cy", String(svg.clientHeight));
 	}
 
+	/* Iterates throught the commits and filters based off if they were commited this year. Then adjusts the point on the chart accordingly. */
 	for(cmt in commits)
 	{
-		if(commits[cmt].commit.author.date.slice(0, 4) == thisDate.getFullYear())
+		var centralTime = convertTZ(commits[cmt].commit.author.date, 'America/Chicago');
+		if(centralTime.getUTCFullYear() == thisDate.getFullYear())
 		{
-			var point = points[parseInt(commits[cmt].commit.author.date.slice(5, 7)) - 1];
+			var point = points[centralTime.getMonth()];
 			var cy = parseInt(point.getAttribute("cy"));
 			if(cy > (0 + (svg.clientHeight / goal)))
 				point.setAttribute("cy", String(cy - (svg.clientHeight / goal)));
 			i++;
 		}
 	}
+	/* Commits the incrementation as the total number of commits for the year into the '# of Commits' column in the table. */
 	let childs = document.getElementById("table-details").children[0].children;
 	let repoChild = childs[repo].children;
 	repoChild[2].innerHTML = i;
@@ -35,7 +40,8 @@ function fillTable(pUser = {})
 	var i = 0; // Keeps track of each repo updated this year
 	for(let repo in pUser)
 	{
-		if(pUser[repo].pushed_at.slice(0, 4) == thisDate.getFullYear())
+		var centralTime = convertTZ(pUser[repo].pushed_at, 'America/Chicago');
+		if(centralTime.getFullYear() == thisDate.getFullYear())
 		{
 			i++;
 			/* Initializes this entry for the table */
@@ -50,7 +56,8 @@ function fillTable(pUser = {})
 			a.innerHTML = pUser[repo].name;
 
 			/* Inserts all the stored data and links to the appropriate position in the table. */
-			tableColumns[0].innerHTML = pUser[repo].pushed_at.split('T')[0];
+			tableColumns[0].innerHTML = centralTime.toString();
+			tableColumns[0].innerHTML = tableColumns[0].innerHTML.slice(9, 9+25);
 			tableColumns[1].appendChild(a);
 			tableColumns[2].innerHTML = " ";
 
