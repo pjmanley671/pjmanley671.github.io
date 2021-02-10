@@ -27,13 +27,19 @@ a
 	color: black;
 }
 
+aside
+{
+	width: 30%;
+	height: auto;
+}
+
 svg
 {
-	width: 480px;
-	height: 240px;
+	width: 100%;
+	height: auto;
 }
 
 table
 {
-	width: 480px;
+	width: 100%;
 }
