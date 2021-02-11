@@ -1,5 +1,10 @@
 import {GetRepos} from './scripts/GitChart.js'
-import {Resize} from './scripts/GitChart.js'
+import {SetPointPositions} from './scripts/GitChart.js'
+
+function Resize()
+{
+  SetPointPositions();
+}
 
 function PageLoad() {
 	switch(document.getElementById("page-name").innerHTML)

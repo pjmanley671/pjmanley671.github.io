@@ -71,6 +71,7 @@ var G = function()
 	var sTimer, uTimer, dTimer, gTimer; // initializes the timer variables.
 	var shotReady = false, ufoReady = false; // initializes and sets the player unique abilities.
 	var shots = [], ufos = []; // initializes the arrays for the shots and ufos.
+	var src = "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/";
 
 	var makeShot = function() // create a new shot object.
 	{
@@ -156,19 +157,19 @@ var G = function()
 	var myLoader = function(image)
 	{
 		var i;
-		if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/BackGround.bmp")
+		if(image.source === src + "BackGround.bmp")
 			PS.imageBlit(image, 0, 0);
 
-		if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/defenderBase.bmp")
+		if(image.source === src + "defenderBase.bmp")
 			PS.imageBlit(image, defender.x - 2, defender.y+1);
-		if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/defenderBotMid.bmp")
+		if(image.source === src + "defenderBotMid.bmp")
 			PS.imageBlit(image, defender.x - 2, defender.y);
-		if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/defenderTopMid.bmp")
+		if(image.source === src + "defenderTopMid.bmp")
 			PS.imageBlit(image, defender.x - 1, defender.y - 1);
-		if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/defenderTop.bmp")
+		if(image.source === src + "defenderTop.bmp")
 			PS.imageBlit(image, defender.x  - 0, defender.y - 2);
 
-		if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/Shot.bmp")
+		if(image.source === src + "Shot.bmp")
 		{
 			for(i = 0; i < shots.length; i++)
 			{
@@ -176,7 +177,7 @@ var G = function()
 			}
 		}
 
-		if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/UfoBase.bmp")
+		if(image.source === src + "UfoBase.bmp")
 		{
 			for(i = 0; i < ufos.length; i++)
 			{
@@ -184,7 +185,7 @@ var G = function()
 			}
 		}
 
-        if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/UfoMid.bmp")
+        if(image.source === src + "UfoMid.bmp")
         {
             for(i = 0; i < ufos.length; i++)
             {
@@ -192,7 +193,7 @@ var G = function()
             }
         }
 
-        if(image.source === "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/UfoTop.bmp")
+        if(image.source === src + "UfoTop.bmp")
         {
         	for(i = 0; i < ufos.length; i++)
         	{
@@ -226,18 +227,18 @@ var G = function()
 
 			drawMap : function() // draws the current instance of the game.
 			{
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/BackGround.bmp", myLoader, 1);
+				PS.imageLoad(src + "BackGround.bmp", myLoader, 1);
 				
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/defenderBase.bmp", myLoader, 2);
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/defenderBotMid.bmp", myLoader, 2);
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/defenderTopMid.bmp", myLoader, 2);
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/defenderTop.bmp", myLoader, 2);
+				PS.imageLoad(src + "defenderBase.bmp", myLoader, 2);
+				PS.imageLoad(src + "defenderBotMid.bmp", myLoader, 2);
+				PS.imageLoad(src + "defenderTopMid.bmp", myLoader, 2);
+				PS.imageLoad(src + "defenderTop.bmp", myLoader, 2);
 
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/Shot.bmp", myLoader, 2);
+				PS.imageLoad(src + "Shot.bmp", myLoader, 2);
 
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/UfoBase.bmp", myLoader, 2);
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/UfoMid.bmp", myLoader, 2);
-				PS.imageLoad("https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/UfoTop.bmp", myLoader, 2);
+				PS.imageLoad(src + "UfoBase.bmp", myLoader, 2);
+				PS.imageLoad(src + "UfoMid.bmp", myLoader, 2);
+				PS.imageLoad(src + "UfoTop.bmp", myLoader, 2);
 
 			},
 
