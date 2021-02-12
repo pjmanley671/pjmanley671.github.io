@@ -1,6 +1,35 @@
 var g_PointCommits = new Uint32Array(12);
+function DrawChart()
+{
+	var l_Svg = document.getElementById("chart");
+	var l_Lines = l_Svg.children;
+	var l_Goal = 10;
 
-function ResetPointPositions()
+	for(var i = 0; i < l_Lines.length; i++)
+	{
+		if(l_Lines[i].outerHTML.substring(1, 5) === "line")
+		{
+			switch(l_Lines[i].id)
+			{
+				case "x-axis":
+					l_Lines[i].setAttribute("y2", String(l_Svg.clientHeight));
+					break;
+				case "y-axis": 
+					l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
+					console.log([l_Lines[i]]);
+					break;
+				default: 
+					l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
+					l_Lines[i].setAttribute("y1", String(l_Svg.clientHeight - (i * (l_Svg.clientHeight / l_Goal))));
+					l_Lines[i].setAttribute("y2", String(l_Svg.clientTop + (i * ((l_Svg.clientHeight / l_Goal)))));
+					console.log(l_Lines[i]);
+					break;
+			}
+		}
+	}
+}
+
+function ResetPoints()
 {
 	var l_Svg = document.getElementById("chart");
 	var l_Points = l_Svg.children;
@@ -18,7 +47,7 @@ function ResetPointPositions()
 
 export function SetPointPositions()
 {
-	ResetPointPositions();
+	ResetPoints();
 	var l_Svg = document.getElementById("chart");
 	var l_Points = l_Svg.children;
 	var l_Goal = 10; // goal designation to qualify a good month.
@@ -48,7 +77,7 @@ function TableCommit(p_Commits = {}, p_Repo, p_Date) {
 	/* Iterates through the p_Commits and filters based off if they were commited this year. Then adjusts the point on the chart accordingly. */
 	for(var cmt in p_Commits)	{
 		var centralTime = convertTZ(p_Commits[cmt].commit.author.date, 'America/Chicago');
-		if(centralTime.getUTCFullYear() === p_Date.getFullYear())
+		if(centralTime.getFullYear() === p_Date.getFullYear())
 		{
 			g_PointCommits[centralTime.getMonth()] += 1;
 			l_CommitCount++;
@@ -103,5 +132,6 @@ function FillTable(p_User = {}) {
 export async function GetRepos(p_url='') {
 	await fetch(p_url)
 		.then(response => { return response.json()})
-		.then(data => FillTable(data));
+		.then(data => FillTable(data))
+		.then(() => DrawChart());
 }
