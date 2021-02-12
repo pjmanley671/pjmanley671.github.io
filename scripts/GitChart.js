@@ -1,68 +1,72 @@
 var g_PointCommits = new Uint32Array(12);
-function DrawChart()
+export function DrawChart()
 {
 	var l_Svg = document.getElementById("chart");
 	var l_Lines = l_Svg.children;
 	var l_Goal = 10;
+	var l_LineNumber = 0;
 
 	for(var i = 0; i < l_Lines.length; i++)
-	{
 		if(l_Lines[i].outerHTML.substring(1, 5) === "line")
-		{
-			switch(l_Lines[i].id)
-			{
+			switch(l_Lines[i].id){
 				case "x-axis":
 					l_Lines[i].setAttribute("y2", String(l_Svg.clientHeight));
 					break;
 				case "y-axis": 
 					l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
-					console.log([l_Lines[i]]);
 					break;
 				default: 
+					l_LineNumber++;
 					l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
-					l_Lines[i].setAttribute("y1", String(l_Svg.clientHeight - (i * (l_Svg.clientHeight / l_Goal))));
-					l_Lines[i].setAttribute("y2", String(l_Svg.clientTop + (i * ((l_Svg.clientHeight / l_Goal)))));
-					console.log(l_Lines[i]);
+					l_Lines[i].setAttribute("y1", String(
+						l_Svg.clientHeight - l_LineNumber * l_Svg.clientHeight / l_Goal));
+					l_Lines[i].setAttribute("y2", String(
+						l_Svg.clientHeight - l_LineNumber * l_Svg.clientHeight / l_Goal));
 					break;
 			}
-		}
-	}
 }
 
-function ResetPoints()
-{
+function ResetPoints(){
 	var l_Svg = document.getElementById("chart");
 	var l_Points = l_Svg.children;
 	var l_XOffset = 30;
+	var l_NumPoints = 0;
+	for(var i = 0; i < l_Points.length; i++)
+		if(l_Points[i].outerHTML.substring(1, 7) === "circle")
+			l_NumPoints++;
 	
 	for(var p = 0; p < l_Points.length; p++)
-	{
-		if(l_Points[p].outerHTML.substring(1, 7) === "circle")
-		{
-			l_Points[p].setAttribute("cx", String((l_Svg.clientWidth / l_Points.length) * p + (l_Svg.clientWidth / l_XOffset)));
+		if(l_Points[p].outerHTML.substring(1, 7) === "circle"){
+			l_Points[p].setAttribute("cx", String(
+				l_Svg.clientWidth / l_NumPoints * p + l_Svg.clientWidth / l_XOffset));
+			
 			l_Points[p].setAttribute("cy", String(l_Svg.clientHeight));
 		}
-	}
 }
 
-export function SetPointPositions()
-{
+export function SetPointPositions(){
 	ResetPoints();
 	var l_Svg = document.getElementById("chart");
 	var l_Points = l_Svg.children;
 	var l_Goal = 10; // goal designation to qualify a good month.
+	var l_PointWalker = 0;
 
 	for(var j = 0; j < l_Points.length; j++)
-	{
-		if(l_Points[j].outerHTML.substring(1, 7) === "circle")
-		{
-			var height = l_Svg.clientHeight - ((g_PointCommits[j] - (Math.floor(g_PointCommits[j] / l_Goal)) * l_Goal) * (l_Svg.clientHeight / l_Goal));
+		if(l_Points[j].outerHTML.substring(1, 7) === "circle"){
+			var height = l_Svg.clientHeight - 
+				(g_PointCommits[l_PointWalker] - 
+					Math.floor(g_PointCommits[l_PointWalker] / l_Goal) * l_Goal) * 
+					l_Svg.clientHeight / l_Goal;
 
 			if(height < 0) height = 0;
 			
 			l_Points[j].setAttribute("cy", String(height));
+			if(g_PointCommits[l_PointWalker] > 10){
+				l_Points[j].setAttribute("fill", "green");
+				l_Points[j].setAttribute("stroke", "black");
+			}
+			l_PointWalker++;
 		}
-	}
 }
 
 // https://stackoverflow.com/questions/10087819/convert-date-to-another-timezone-in-javascript
@@ -75,8 +79,9 @@ function TableCommit(p_Commits = {}, p_Repo, p_Date) {
 	var l_CommitCount = 0;
 
 	/* Iterates through the p_Commits and filters based off if they were commited this year. Then adjusts the point on the chart accordingly. */
-	for(var cmt in p_Commits)	{
+	for(var cmt in p_Commits){
 		var centralTime = convertTZ(p_Commits[cmt].commit.author.date, 'America/Chicago');
+
 		if(centralTime.getFullYear() === p_Date.getFullYear())
 		{
 			g_PointCommits[centralTime.getMonth()] += 1;
@@ -88,14 +93,14 @@ function TableCommit(p_Commits = {}, p_Repo, p_Date) {
 	l_TableCommitsColumn[2].innerHTML = l_CommitCount;
 }
 
-function FillTable(p_User = {}) {
+function FillTable(p_User = {}){
 	var l_repo = 0; // Keeps track of each repo updated this year
 	var l_Date = new Date();
-	for(let repo in p_User)
-	{
+
+	for(let repo in p_User){
 		var centralTime = convertTZ(p_User[repo].pushed_at, 'America/Chicago');
-		if(centralTime.getFullYear() === l_Date.getFullYear())
-		{
+
+		if(centralTime.getFullYear() === l_Date.getFullYear()){
 			l_repo++;
 			/* Initializes this entry for the table */
 			let tableColumns = [];
