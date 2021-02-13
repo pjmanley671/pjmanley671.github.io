@@ -22,31 +22,39 @@
 			<h2 style="text-align: center;">The years progress!</h2>
 			<br />
 			<svg id="chart">
-				<circle r="5" cx="36" cy="240" stroke-width="2" />
-				<circle r="5" cx="72" cy="240" stroke-width="2" />
-				<circle r="5" cx="108" cy="240" stroke-width="2" />
-				<circle r="5" cx="144" cy="240" stroke-width="2" />
-				<circle r="5" cx="180" cy="240" stroke-width="2" />
-				<circle r="5" cx="216" cy="240" stroke-width="2" />
-				<circle r="5" cx="252" cy="240" stroke-width="2" />
-				<circle r="5" cx="288" cy="240" stroke-width="2" />
-				<circle r="5" cx="324" cy="240" stroke-width="2" />
-				<circle r="5" cx="360" cy="240" stroke-width="2" />
-				<circle r="5" cx="396" cy="240" stroke-width="2" />
-				<circle r="5" cx="432" cy="240" stroke-width="2" />
-				<line id="x-axis" x1="1" y1="0" x2="1" y2="480" stroke="black"/>
-				<line id="y-axis" x1="0" y1="149" x2="480" y2="149" stroke="black" />
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				<line x1="0" y1="149" x2="480" y2="149" stroke="gray" opacity=".4"/>
-				</svg>
+				<g fill="black" stroke="white" stroke-width="1"> <!-- Chart Points -->
+					<circle r="5" /> <circle r="5" /> <circle r="5" />
+					<circle r="5" /> <circle r="5" /> <circle r="5" />
+					<circle r="5" /> <circle r="5" /> <circle r="5" />
+					<circle r="5" /> <circle r="5" /> <circle r="5" /></g>
+				<g stroke="gray"> <!-- Chart Lines including 0 lines-->
+					<line id="x-axis" x1="0" y1="0" x2="1" y2="480" stroke="black"/>
+					<line id="y-axis" x1="0" y1="149" x2="480" y2="149" stroke="black" />
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/></g></svg>
+			<svg id="chart-x-definitions" style="height: 50px;">
+				<g font-size="12" fill="black"> <!-- Months -->
+					<text x="5" y="10">Jan.</text>
+					<text x="55" y="10">Feb.</text>
+					<text x="105" y="10">Mar.</text>
+					<text x="155" y="10">Apr.</text>
+					<text x="205" y="10">May</text>
+					<text x="250" y="10">Jun.</text>
+					<text x="300" y="10">Jul.</text>
+					<text x="345" y="10">Aug.</text>
+					<text x="395" y="10">Nov.</text>
+					<text x="440" y="10">Oct.</text>
+					<text x="490" y="10">Sep.</text>
+					<text x="540" y="10">Dec.</text></g>
+			</svg>
 			<table id="table-details">
 				<tr id="table-header">
 					<th>Last Pushed</th>

@@ -1,53 +1,28 @@
 var g_PointCommits = new Uint32Array(12);
-export function DrawChart()
-{
-	var l_Svg = document.getElementById("chart");
-	var l_Lines = l_Svg.children;
-	var l_Goal = 10;
-	var l_LineNumber = 0;
 
-	for(var i = 0; i < l_Lines.length; i++)
-		if(l_Lines[i].outerHTML.substring(1, 5) === "line")
-			switch(l_Lines[i].id){
-				case "x-axis":
-					l_Lines[i].setAttribute("y2", String(l_Svg.clientHeight));
-					break;
-				case "y-axis": 
-					l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
-					break;
-				default: 
-					l_LineNumber++;
-					l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
-					l_Lines[i].setAttribute("y1", String(
-						l_Svg.clientHeight - l_LineNumber * l_Svg.clientHeight / l_Goal));
-					l_Lines[i].setAttribute("y2", String(
-						l_Svg.clientHeight - l_LineNumber * l_Svg.clientHeight / l_Goal));
-					break;
-			}
+// https://stackoverflow.com/questions/10087819/convert-date-to-another-timezone-in-javascript
+function convertTZ(date, tzString) {
+    return new Date((typeof date === "string" ? 
+		new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
 }
 
 function ResetPoints(){
 	var l_Svg = document.getElementById("chart");
-	var l_Points = l_Svg.children;
-	var l_XOffset = 30;
-	var l_NumPoints = 0;
-	for(var i = 0; i < l_Points.length; i++)
-		if(l_Points[i].outerHTML.substring(1, 7) === "circle")
-			l_NumPoints++;
+	var l_Points = l_Svg.children[0].children;
+	var l_XOffset = l_Svg.clientWidth / 30;
 	
 	for(var p = 0; p < l_Points.length; p++)
 		if(l_Points[p].outerHTML.substring(1, 7) === "circle"){
-			l_Points[p].setAttribute("cx", String(
-				l_Svg.clientWidth / l_NumPoints * p + l_Svg.clientWidth / l_XOffset));
+			l_Points[p].setAttribute("cx", String(l_Svg.clientLeft + 
+				p * l_Svg.clientWidth / l_Points.length + l_XOffset));
 			
 			l_Points[p].setAttribute("cy", String(l_Svg.clientHeight));
 		}
 }
 
-export function SetPointPositions(){
-	ResetPoints();
+function SetPointPositions(){
 	var l_Svg = document.getElementById("chart");
-	var l_Points = l_Svg.children;
+	var l_Points = l_Svg.children[0].children;
 	var l_Goal = 10; // goal designation to qualify a good month.
 	var l_PointWalker = 0;
 
@@ -69,9 +44,33 @@ export function SetPointPositions(){
 		}
 }
 
-// https://stackoverflow.com/questions/10087819/convert-date-to-another-timezone-in-javascript
-function convertTZ(date, tzString) {
-    return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
+export function DrawChart()
+{
+	var l_Svg = document.getElementById("chart");
+	var l_Lines = l_Svg.children[1].children;
+	var l_Goal = 10;
+	var l_LineNumber = 0;
+
+	for(var i = 0; i < l_Lines.length; i++)
+			switch(l_Lines[i].id){
+				case "x-axis":
+					l_Lines[i].setAttribute("y2", String(l_Svg.clientHeight));
+					break;
+				case "y-axis": 
+					l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
+					break;
+				default: 
+					l_LineNumber++;
+					l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
+					l_Lines[i].setAttribute("y1", String(
+						l_Svg.clientHeight - l_LineNumber * l_Svg.clientHeight / l_Goal));
+					l_Lines[i].setAttribute("y2", String(
+						l_Svg.clientHeight - l_LineNumber * l_Svg.clientHeight / l_Goal));
+					break;
+			}
+
+	ResetPoints();
+	SetPointPositions();
 }
 
 function TableCommit(p_Commits = {}, p_Repo, p_Date) {
@@ -119,7 +118,7 @@ function FillTable(p_User = {}){
 			tableColumns[1].appendChild(a);
 			tableColumns[2].innerHTML = " ";
 
-			for(j = 0; j < tableColumns.length; j++) 
+			for(var j = 0; j < tableColumns.length; j++) 
 				tableRow.appendChild(tableColumns[j]);
 
 			/* Sends the table information to the webpage table */
@@ -129,7 +128,7 @@ function FillTable(p_User = {}){
 			fetch(p_User[repo].commits_url.slice(0, p_User[repo].commits_url.length - 6))
 				.then(response => {return response.json()})
 				.then(data => TableCommit(data, l_repo, l_Date))
-				.then(() => SetPointPositions());
+				.then(() => DrawChart());
 		}
 	}
 }
@@ -138,5 +137,4 @@ export async function GetRepos(p_url='') {
 	await fetch(p_url)
 		.then(response => { return response.json()})
 		.then(data => FillTable(data))
-		.then(() => DrawChart());
 }

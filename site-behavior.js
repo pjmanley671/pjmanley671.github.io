@@ -1,9 +1,7 @@
-import {GetRepos} from './scripts/GitChart.js'
-import {SetPointPositions} from './scripts/GitChart.js'
-import {DrawChart} from './scripts/GitChart.js'
+import {GetRepos, DrawChart} from './scripts/GitChart.js'
+
 function Resize()
 {
-  SetPointPositions();
   DrawChart();
 }
 
