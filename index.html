@@ -6,6 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="styles/default.css"/>
 		<script type="module" src="site-behavior.js"></script>
 		<link rel="icon" href="data:,"> <!-- Circumvents Favicon.ico issue ==> https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests -->
+		<!-- <link rel="icon" href="./icons/External_Marks/GitHub-Mark.eps" /> -->
 	</head>
 	
 	<body>
@@ -22,12 +23,13 @@
 			<h2 style="text-align: center;">The years progress!</h2>
 			<br />
 			<svg id="chart">
-				<g fill="black" stroke="white" stroke-width="1"> <!-- Chart Points -->
+				<image width="100" href="./icons/External_Marks/GitHub-Mark-120px-plus.png" />
+				<g id="CircleGroup" fill="black" stroke="white" stroke-width="1"> <!-- Chart Points -->
 					<circle r="5" /> <circle r="5" /> <circle r="5" />
 					<circle r="5" /> <circle r="5" /> <circle r="5" />
 					<circle r="5" /> <circle r="5" /> <circle r="5" />
 					<circle r="5" /> <circle r="5" /> <circle r="5" /></g>
-				<g stroke="gray"> <!-- Chart Lines including 0 lines-->
+				<g id="LineGroup" stroke="gray"> <!-- Chart Lines including 0 lines-->
 					<line id="x-axis" x1="0" y1="0" x2="1" y2="480" stroke="black"/>
 					<line id="y-axis" x1="0" y1="149" x2="480" y2="149" stroke="black" />
 					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>

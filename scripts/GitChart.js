@@ -1,55 +1,55 @@
 var g_PointCommits = new Uint32Array(12);
 
 // https://stackoverflow.com/questions/10087819/convert-date-to-another-timezone-in-javascript
-function convertTZ(date, tzString) {
+function convertTZ(date, tzString){
     return new Date((typeof date === "string" ? 
 		new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
 }
 
 function ResetPoints(){
 	var l_Svg = document.getElementById("chart");
-	var l_Points = l_Svg.children[0].children;
+	var l_Points = document.getElementById("CircleGroup").children;
 	var l_XOffset = l_Svg.clientWidth / 30;
 	
-	for(var p = 0; p < l_Points.length; p++)
-		if(l_Points[p].outerHTML.substring(1, 7) === "circle"){
+	for(var p = 0; p < l_Points.length; p++){
 			l_Points[p].setAttribute("cx", String(l_Svg.clientLeft + 
 				p * l_Svg.clientWidth / l_Points.length + l_XOffset));
 			
 			l_Points[p].setAttribute("cy", String(l_Svg.clientHeight));
-		}
+	}
 }
 
 function SetPointPositions(){
 	var l_Svg = document.getElementById("chart");
-	var l_Points = l_Svg.children[0].children;
+	var l_Points = document.getElementById("CircleGroup").children;
 	var l_Goal = 10; // goal designation to qualify a good month.
 	var l_PointWalker = 0;
 
-	for(var j = 0; j < l_Points.length; j++)
-		if(l_Points[j].outerHTML.substring(1, 7) === "circle"){
-			var height = l_Svg.clientHeight - 
-				(g_PointCommits[l_PointWalker] - 
-					Math.floor(g_PointCommits[l_PointWalker] / l_Goal) * l_Goal) * 
-					l_Svg.clientHeight / l_Goal;
+	for(var j = 0; j < l_Points.length; j++){
+		var height = l_Svg.clientHeight - 
+			(g_PointCommits[l_PointWalker] - 
+				Math.floor(g_PointCommits[l_PointWalker] / l_Goal) * l_Goal) * 
+				l_Svg.clientHeight / l_Goal;
 
-			if(height < 0) height = 0;
-			
-			l_Points[j].setAttribute("cy", String(height));
-			if(g_PointCommits[l_PointWalker] > 10){
-				l_Points[j].setAttribute("fill", "green");
-				l_Points[j].setAttribute("stroke", "black");
-			}
-			l_PointWalker++;
+		if(height < 0) height = 0;
+		
+		l_Points[j].setAttribute("cy", String(height));
+		if(g_PointCommits[l_PointWalker] > 10){
+			l_Points[j].setAttribute("fill", "green");
+			l_Points[j].setAttribute("stroke", "black");
 		}
+		l_PointWalker++;
+	}
 }
 
-export function DrawChart()
-{
+export function DrawChart(){
 	var l_Svg = document.getElementById("chart");
-	var l_Lines = l_Svg.children[1].children;
+	var l_Lines = document.getElementById("LineGroup").children; 
 	var l_Goal = 10;
 	var l_LineNumber = 0;
+
+	var githubMark = l_Svg.children[0];
+	githubMark.setAttribute("x", String(0.5 * l_Svg.clientWidth - 0.75 * parseInt(githubMark.getAttribute("width"))));
 
 	for(var i = 0; i < l_Lines.length; i++)
 			switch(l_Lines[i].id){
@@ -81,8 +81,7 @@ function TableCommit(p_Commits = {}, p_Repo, p_Date) {
 	for(var cmt in p_Commits){
 		var centralTime = convertTZ(p_Commits[cmt].commit.author.date, 'America/Chicago');
 
-		if(centralTime.getFullYear() === p_Date.getFullYear())
-		{
+		if(centralTime.getFullYear() === p_Date.getFullYear()){
 			g_PointCommits[centralTime.getMonth()] += 1;
 			l_CommitCount++;
 		}
@@ -133,7 +132,7 @@ function FillTable(p_User = {}){
 	}
 }
 
-export async function GetRepos(p_url='') {
+export async function GetRepos(p_url=''){
 	await fetch(p_url)
 		.then(response => { return response.json()})
 		.then(data => FillTable(data))
