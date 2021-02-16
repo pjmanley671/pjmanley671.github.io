@@ -23,7 +23,7 @@
 			<h2 style="text-align: center;">The years progress!</h2>
 			<br />
 			<svg id="chart">
-				<image width="100" href="./icons/External_Marks/GitHub-Mark-120px-plus.png" />
+				<image id="GithubMark" width="100" href="./icons/External_Marks/GitHub-Mark-120px-plus.png" opacity=".2"/>
 				<g id="CircleGroup" fill="black" stroke="white" stroke-width="1"> <!-- Chart Points -->
 					<circle r="5" /> <circle r="5" /> <circle r="5" />
 					<circle r="5" /> <circle r="5" /> <circle r="5" />
@@ -44,25 +44,27 @@
 					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/></g></svg>
 			<svg id="chart-x-definitions" style="height: 50px;">
 				<g font-size="12" fill="black"> <!-- Months -->
-					<text x="5" y="10">Jan.</text>
-					<text x="55" y="10">Feb.</text>
-					<text x="105" y="10">Mar.</text>
-					<text x="155" y="10">Apr.</text>
-					<text x="205" y="10">May</text>
-					<text x="250" y="10">Jun.</text>
-					<text x="300" y="10">Jul.</text>
-					<text x="345" y="10">Aug.</text>
-					<text x="395" y="10">Nov.</text>
-					<text x="440" y="10">Oct.</text>
-					<text x="490" y="10">Sep.</text>
-					<text x="540" y="10">Dec.</text></g>
+					<text x="10" y="10">Jan.</text>
+					<text x="70" y="10">Feb.</text>
+					<text x="125" y="10">Mar.</text>
+					<text x="185" y="10">Apr.</text>
+					<text x="240" y="10">May</text>
+					<text x="295" y="10">Jun.</text>
+					<text x="345" y="10">Jul.</text>
+					<text x="400" y="10">Aug.</text>
+					<text x="460" y="10">Nov.</text>
+					<text x="510" y="10">Oct.</text>
+					<text x="570" y="10">Sep.</text>
+					<text x="630" y="10">Dec.</text></g>
 			</svg>
-			<table id="table-details">
-				<tr id="table-header">
-					<th>Last Pushed</th>
-					<th>Project Name</th>
-					<th># of Commits</th>
-					</tr>
+			<table>
+				<tbody id="table-details">
+					<tr id="table-header">
+						<th>Project Name</th>
+						<th>Last Pushed</th>
+						<th># of Commits</th>
+						</tr>
+					</tbody>
 				</table>
 			</aside>
 		<footer>

@@ -1,15 +1,21 @@
-import {GetRepos, DrawChart} from './scripts/GitChart.js'
+import {GetAndHandleRepos, DrawChart} from './scripts/GitChart.js'
 
-function Resize()
+const Resize = () =>
 {
-  DrawChart();
+  switch(document.getElementById("page-name").innerHTML){
+    case "Paul Manley - Portfolio":
+      DrawChart();
+      break;
+    default:
+       break;
+  }
 }
 
 function PageLoad() {
 	switch(document.getElementById("page-name").innerHTML)
 	{
 		case "Paul Manley - Portfolio":
-			GetRepos('https://api.github.com/users/pjmanley671/repos');
+			GetAndHandleRepos('https://api.github.com/users/pjmanley671/repos');
 			break;
 		default:
 			break;
@@ -18,6 +24,8 @@ function PageLoad() {
 
 window.onload = PageLoad;
 window.onresize = Resize;
+
+window.onload = PageLoad;
 
 
 /*
