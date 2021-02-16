@@ -2,11 +2,34 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title id="page-name">Paul Manley - Portfolio</title>
-		<link rel="stylesheet" type="text/css" href="styles/default.css"/>
+		<!-- External Imports -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="styles/default.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/header.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/GitChart.css"/>
 		<script type="module" src="site-behavior.js"></script>
+		<script type="application/javascript">
+			function ConfirmRedirect(localURL, localIdentifier = ''){
+				var message = null;
+				var confirmation = true;
+				switch(localIdentifier){
+					case "Perlinspiel": message="This page uses Perlenspiel Browser Engine which requires strict html control and is not setup by me aside from what is permittable. \n\nAre you sure you want to redirect?"; 
+						break;
+					default: 
+						break;
+				}
+
+				if(message != null){
+					confirmation = confirm(message);
+				}
+
+				if(confirmation){
+					window.location.replace(localURL);
+				}
+			}
+		</script>
 		<link rel="icon" href="data:,"> <!-- Circumvents Favicon.ico issue ==> https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests -->
+		<title id="page-name">Paul Manley - Portfolio</title>
 	</head>
 	
 	<body>
@@ -16,68 +39,72 @@
 				<a href="#"><i class="fa fa-fw fa-envelope"></i> </a>
 				<a href="#"><i class="fa fa-fw fa-search"></i> CV</a>
 				<div class="dropdown">
-					<button class="dropbtn">Play a Game
+					<button class="dropbtn">Play Something
 					  <i class="fa fa-caret-down"></i>
 					</button>
 					<div class="dropdown-content">
-					  <a href="#">Link 1</a>
-					  <a href="#">Link 2</a>
-					  <a href="#">Link 3</a>
+					  <button onclick="ConfirmRedirect('./pages/SlidingPuzzle.html', 'Perlinspiel')">Sliding Puzzle</button>
+					  <button onclick="ConfirmRedirect('./pages/ColorLock.html', 'Perlinspiel')">ColorLock</button>
+					  <button onclick="ConfirmRedirect('./pages/SpaceInvaders.html', 'Perlinspiel')">Two Player Space Invader</button>
 					</div>
 				  </div>
 				</div>
 			</header>
-		<section id="page-content">
-
-			</section>
-		<aside>
-			<h2 style="text-align: center;">Commits vs. Months</h2>
-			<br />
-			<svg id="chart">
-				<image id="GithubMark" width="100" href="./icons/External_Marks/GitHub-Mark-120px-plus.png" opacity=".2"/>
-				<g id="CircleGroup" fill="black" stroke="white" stroke-width="1"> <!-- Chart Points -->
-					<circle r="5" /> <circle r="5" /> <circle r="5" />
-					<circle r="5" /> <circle r="5" /> <circle r="5" />
-					<circle r="5" /> <circle r="5" /> <circle r="5" />
-					<circle r="5" /> <circle r="5" /> <circle r="5" /></g>
-				<g id="LineGroup" stroke="gray"> <!-- Chart Lines including 0 lines-->
-					<line id="x-axis" x1="0" y1="0" x2="1" y2="480" stroke="black"/>
-					<line id="y-axis" x1="0" y1="149" x2="480" y2="149" stroke="black" />
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
-					<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/></g></svg>
-			<svg id="chart-x-definitions" style="height: 50px;">
-				<g font-size="12" fill="black"> <!-- Months -->
-					<text x="10" y="10">Jan.</text>
-					<text x="70" y="10">Feb.</text>
-					<text x="125" y="10">Mar.</text>
-					<text x="185" y="10">Apr.</text>
-					<text x="240" y="10">May</text>
-					<text x="295" y="10">Jun.</text>
-					<text x="345" y="10">Jul.</text>
-					<text x="400" y="10">Aug.</text>
-					<text x="460" y="10">Nov.</text>
-					<text x="510" y="10">Oct.</text>
-					<text x="570" y="10">Sep.</text>
-					<text x="630" y="10">Dec.</text></g>
-			</svg>
-			<table>
-				<tbody id="table-details">
-					<tr id="table-header">
-						<th>Project Name</th>
-						<th>Last Pushed</th>
-						<th># of Commits</th>
-						</tr>
-					</tbody>
-				</table>
-			</aside>
+		<div class="flexbox-container">
+			<section id="page-content">
+				<p>This site is a work in progress to find out more while this is still under construction go to:</p>
+				<br />
+				<a href="https://pjmanley671.wixsite.com/portfolio">pjmanley671.wixsite.com</a>
+				</section>
+			<aside>
+				<h2 style="text-align: center;">Commits vs. Months</h2>
+				<br />
+				<svg id="chart">
+					<image id="GithubMark" width="100" href="./icons/External_Marks/GitHub-Mark-120px-plus.png" opacity=".2"/>
+					<g id="CircleGroup" fill="black" stroke="white" stroke-width="1"> <!-- Chart Points -->
+						<circle r="5" /> <circle r="5" /> <circle r="5" />
+						<circle r="5" /> <circle r="5" /> <circle r="5" />
+						<circle r="5" /> <circle r="5" /> <circle r="5" />
+						<circle r="5" /> <circle r="5" /> <circle r="5" /></g>
+					<g id="LineGroup" stroke="gray"> <!-- Chart Lines including 0 lines-->
+						<line id="x-axis" x1="0" y1="0" x2="1" y2="480" stroke="black" stroke-width="2"/>
+						<line id="y-axis" x1="0" y1="149" x2="480" y2="149" stroke="black" stroke-width="2"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
+						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/></g></svg>
+				<svg id="chart-x-definitions" style="height: 50px;">
+					<g font-size="12" fill="black"> <!-- Months -->
+						<text x="10" y="10">Jan.</text>
+						<text x="70" y="10">Feb.</text>
+						<text x="125" y="10">Mar.</text>
+						<text x="185" y="10">Apr.</text>
+						<text x="240" y="10">May</text>
+						<text x="295" y="10">Jun.</text>
+						<text x="345" y="10">Jul.</text>
+						<text x="400" y="10">Aug.</text>
+						<text x="460" y="10">Nov.</text>
+						<text x="510" y="10">Oct.</text>
+						<text x="570" y="10">Sep.</text>
+						<text x="630" y="10">Dec.</text></g>
+				</svg>
+				<table>
+					<tbody id="table-details">
+						<tr id="table-header">
+							<th>Project Name</th>
+							<th>Last Pushed</th>
+							<th># of Commits</th>
+							</tr>
+						</tbody>
+					</table>
+				</aside>
+			</div>
 		<footer>
 			
 			</footer>

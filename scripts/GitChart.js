@@ -6,6 +6,15 @@ function convertTZ(date, tzString){
 		new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
 }
 
+function ResetMonths(){
+	var l_SVG = document.getElementById("chart-x-definitions");
+	var l_Months = l_SVG.children[0];
+	var l_XOffset = l_SVG.clientWidth / 50;
+
+	for(var i = 0; i < l_Months.children.length; i++)
+		l_Months.children[i].setAttribute("x", String(i * l_SVG.clientWidth / l_Months.children.length + l_XOffset));
+}
+
 function ResetPoints(){
 	var l_Svg = document.getElementById("chart"), 
 		l_Points = document.getElementById("CircleGroup").children,
@@ -36,6 +45,10 @@ function SetPointPositions(){
 }
 
 export function DrawChart(){
+	ResetPoints();
+	SetPointPositions();
+	ResetMonths();
+	
 	var l_Svg = document.getElementById("chart"), 
 		l_Lines = document.getElementById("LineGroup").children,
 		l_Goal = 10, l_LineNumber = 0,
@@ -45,16 +58,17 @@ export function DrawChart(){
 		String(0.5 * l_Svg.clientWidth - 0.75 * parseInt(
 			githubMark.getAttribute("width"))));
 
-	ResetPoints();
-	SetPointPositions();
-	console.log(document.getElementById("table-details").children[1]);
 	for(var i = 0; i < l_Lines.length; i++)
 		switch(l_Lines[i].id){
 			case "x-axis":
 				l_Lines[i].setAttribute("y2", String(l_Svg.clientHeight));
+				l_Lines[i].setAttribute("x1", String(l_Svg.clientLeft + 1));
+				l_Lines[i].setAttribute("x2", String(l_Svg.clientLeft + 1));
 				break;
 			case "y-axis": 
 				l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
+				l_Lines[i].setAttribute("y1", String(l_Svg.clientHeight - 1));
+				l_Lines[i].setAttribute("y2", String(l_Svg.clientHeight - 1));
 				break;
 			default: 
 				l_LineNumber++;
@@ -67,10 +81,6 @@ export function DrawChart(){
 		}
 }
 
-// const tableColors = Object.freeze({rowOdd: 'white' || 1, rowEven: 'dark-gray' || 2, columnName: '3', columnPushed: '4', columnCommits: '5'});
-// tableRow.style.backgroundColor = tableColors[l_repo % 2] + ' !important';
-
-
 function UpdateTable(p_RepoName, p_PushedDate, p_CommitTotal, p_RepoURL = ''){
 	if(p_RepoName    == null || undefined || '') return;
 	if(p_CommitTotal == null || undefined || '') return;
@@ -79,15 +89,19 @@ function UpdateTable(p_RepoName, p_PushedDate, p_CommitTotal, p_RepoURL = ''){
 	const COLUMNS = 3;
 	var l_Table		 = document.getElementById("table-details");
 	var l_TableRow 	 = document.createElement("tr");
-	var l_a 		 = document.createElement("a");
+	var l_button 	 = document.createElement("button");
 
-	l_a.href = p_RepoURL;
-	l_a.innerHTML = p_RepoName;
+	l_button.innerHTML = p_RepoName;
+	l_button.value = p_RepoURL;
+
+	l_button.addEventListener("click", event => {
+		window.open(event.target.value, "_self");
+	})
 
 	for(var i = 0; i < COLUMNS; i++){
 		var column = document.createElement("td");
 		switch(i){
-			case 0: column.appendChild(l_a); break;
+			case 0: column.appendChild(l_button); break;
 			case 1: column.innerHTML = p_PushedDate; break;
 			case 2: column.innerHTML = p_CommitTotal.toString(); break;
 			default: break;
