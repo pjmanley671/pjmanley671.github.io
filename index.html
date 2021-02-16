@@ -4,23 +4,34 @@
 		<meta charset="UTF-8">
 		<title id="page-name">Paul Manley - Portfolio</title>
 		<link rel="stylesheet" type="text/css" href="styles/default.css"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<script type="module" src="site-behavior.js"></script>
 		<link rel="icon" href="data:,"> <!-- Circumvents Favicon.ico issue ==> https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests -->
-		<!-- <link rel="icon" href="./icons/External_Marks/GitHub-Mark.eps" /> -->
 	</head>
 	
 	<body>
-		<nav id="top-nav">
-
-			</nav>
 		<header>
-
+			<div class="navbar">
+				<a class="active" href="#"><i class="fa fa-fw fa-home"></i> </a>
+				<a href="#"><i class="fa fa-fw fa-envelope"></i> </a>
+				<a href="#"><i class="fa fa-fw fa-search"></i> CV</a>
+				<div class="dropdown">
+					<button class="dropbtn">Play a Game
+					  <i class="fa fa-caret-down"></i>
+					</button>
+					<div class="dropdown-content">
+					  <a href="#">Link 1</a>
+					  <a href="#">Link 2</a>
+					  <a href="#">Link 3</a>
+					</div>
+				  </div>
+				</div>
 			</header>
 		<section id="page-content">
 
 			</section>
 		<aside>
-			<h2 style="text-align: center;">The years progress!</h2>
+			<h2 style="text-align: center;">Commits vs. Months</h2>
 			<br />
 			<svg id="chart">
 				<image id="GithubMark" width="100" href="./icons/External_Marks/GitHub-Mark-120px-plus.png" opacity=".2"/>

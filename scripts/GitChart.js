@@ -47,7 +47,7 @@ export function DrawChart(){
 
 	ResetPoints();
 	SetPointPositions();
-	
+	console.log(document.getElementById("table-details").children[1]);
 	for(var i = 0; i < l_Lines.length; i++)
 		switch(l_Lines[i].id){
 			case "x-axis":
