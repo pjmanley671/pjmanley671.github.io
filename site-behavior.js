@@ -25,8 +25,6 @@ function PageLoad() {
 window.onload = PageLoad;
 window.onresize = Resize;
 
-window.onload = PageLoad;
-
 
 /*
  * https://stackoverflow.com/questions/17147821/how-to-make-a-whole-row-in-a-table-clickable-as-a-link

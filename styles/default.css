@@ -21,7 +21,8 @@ header{
 
 section{
 	display:inline;
-	width:65%;
+	width: 50%;
+	margin-left: 5%;
 }
 
 aside{
@@ -40,7 +41,7 @@ a{
 	color: black;
 }
 
-@media screen and (max-width: 500px){
+@media screen and (max-width: 800px){
 	.flexbox-container{
 		display:inline-block;
 	}
