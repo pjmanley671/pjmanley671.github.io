@@ -1,7 +1,6 @@
 import {GetAndHandleRepos, DrawChart} from './scripts/GitChart.js'
 
-const Resize = () =>
-{
+const Resize = () =>{
   switch(document.getElementById("page-name").innerHTML){
     case "Paul Manley - Portfolio":
       DrawChart();

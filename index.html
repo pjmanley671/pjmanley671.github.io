@@ -9,26 +9,28 @@
 		<link rel="stylesheet" type="text/css" href="styles/header.css"/>
 		<link rel="stylesheet" type="text/css" href="styles/GitChart.css"/>
 		<script type="module" src="site-behavior.js"></script>
+		<!-- <script type="application/javascript" src="scripts/GitChart.js"></script> -->
 		<script type="application/javascript">
 			function ConfirmRedirect(localURL, localIdentifier = ''){
 				var message = null;
 				var confirmation = true;
 				switch(localIdentifier){
-					case "Perlinspiel": message="This page uses Perlenspiel Browser Engine which requires strict html control and is not setup by me aside from what is permittable. \n\nAre you sure you want to redirect?"; 
+					case "Perlinspiel": message=
+						"This page uses Perlenspiel Browser Engine which requires strict html control and is not setup by me aside from what is permittable." +
+						"\n\nAre you sure you want to redirect?"; 
 						break;
 					default: 
 						break;
 				}
 
-				if(message != null){
+				if(message != null)
 					confirmation = confirm(message);
-				}
 
-				if(confirmation){
+				if(confirmation)
 					window.location.replace(localURL);
-				}
 			}
 		</script>
+
 		<link rel="icon" href="data:,"> <!-- Circumvents Favicon.ico issue ==> https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests -->
 		<title id="page-name">Paul Manley - Portfolio</title>
 	</head>

@@ -7,81 +7,83 @@ function convertTZ(date, tzString){
 }
 
 function ResetMonths(){
-	var l_SVG = document.getElementById("chart-x-definitions");
-	var l_Months = l_SVG.children[0];
-	var l_XOffset = l_SVG.clientWidth / 50;
+	var l_SVG 		= document.getElementById("chart-x-definitions"),
+		l_Months 	= l_SVG.children[0],
+		l_XOffset 	= l_SVG.clientWidth / 50;
 
-	for(var i = 0; i < l_Months.children.length; i++)
+	for(let i = 0; i < l_Months.children.length; i++)
 		l_Months.children[i].setAttribute("x", String(i * l_SVG.clientWidth / l_Months.children.length + l_XOffset));
 }
 
-function ResetPoints(){
-	var l_Svg = document.getElementById("chart"), 
-		l_Points = document.getElementById("CircleGroup").children,
-		l_XOffset = l_Svg.clientWidth / 30;
+function ResetPoints(p_SVG){
+	var l_Points 	= document.getElementById("CircleGroup").children,
+		l_XOffset	= p_SVG.clientWidth / 30;
 	
-	for(var p = 0; p < l_Points.length; p++){
-			l_Points[p].setAttribute("cx", String(
-				p * l_Svg.clientWidth / l_Points.length + l_XOffset));
+	for(let p = 0; p < l_Points.length; p++){
+			l_Points[p].setAttribute("cx", String(p * p_SVG.clientWidth / l_Points.length + l_XOffset));
 			
-			l_Points[p].setAttribute("cy", String(l_Svg.clientHeight));
+			l_Points[p].setAttribute("cy", String(p_SVG.clientHeight));
 	}
 }
 
-function SetPointPositions(){
-	var l_Svg = document.getElementById("chart"),
-		l_Points = document.getElementById("CircleGroup").children,
-		l_Goal = 10;
+function SetPointPositions(p_SVG, p_Goal){
+	var l_Points = document.getElementById("CircleGroup").children;
 
-	for(var j = 0; j < l_Points.length; j++){
-		var height = l_Svg.clientHeight -  (g_Commits[j] - 
-				Math.floor(g_Commits[j] / l_Goal) * l_Goal) * 
-				l_Svg.clientHeight / l_Goal;
+	for(let i = 0; i < l_Points.length; i++){
+ 		let height = p_SVG.clientHeight - 
+			(g_Commits[i] - Math.floor(g_Commits[i] / p_Goal) * p_Goal) 
+			* p_SVG.clientHeight / p_Goal;
 
 		if(height < 0) height = 0;
 		
-		l_Points[j].setAttribute("cy", String(height));
+		l_Points[i].setAttribute("cy", String(height));
+	}
+}
+
+function ResetLines(p_SVG, p_Goal){
+	var l_LineNumber 	= 0,
+		l_Lines 		= document.getElementById("LineGroup").children;
+
+	for(let i = 0; i < l_Lines.length; i++)
+	switch(l_Lines[i].id){
+		case "x-axis":
+			l_Lines[i].setAttribute("y2", String(p_SVG.clientHeight));
+			l_Lines[i].setAttribute("x1", String(p_SVG.clientLeft + 1));
+			l_Lines[i].setAttribute("x2", String(p_SVG.clientLeft + 1));
+			break;
+		case "y-axis": 
+			l_Lines[i].setAttribute("x2", String(p_SVG.clientWidth));
+			l_Lines[i].setAttribute("y1", String(p_SVG.clientHeight - 1));
+			l_Lines[i].setAttribute("y2", String(p_SVG.clientHeight - 1));
+			break;
+		default: 
+			l_LineNumber++;
+			l_Lines[i].setAttribute("x2", String(p_SVG.clientWidth));
+			l_Lines[i].setAttribute("y1", String(
+				p_SVG.clientHeight - l_LineNumber * p_SVG.clientHeight / p_Goal));
+			l_Lines[i].setAttribute("y2", String(
+				p_SVG.clientHeight - l_LineNumber * p_SVG.clientHeight / p_Goal));
+			break;
 	}
 }
 
 export function DrawChart(){
-	ResetPoints();
-	SetPointPositions();
-	ResetMonths();
-	
-	var l_Svg = document.getElementById("chart"), 
-		l_Lines = document.getElementById("LineGroup").children,
-		l_Goal = 10, l_LineNumber = 0,
-		githubMark = l_Svg.children[0];
+	var l_SVG 		= document.getElementById("chart"), 
+		l_Goal 		= 10,
+		l_GithubMark 	= l_SVG.children[0];
 
-	githubMark.setAttribute("x",
-		String(0.5 * l_Svg.clientWidth - 0.75 * parseInt(
-			githubMark.getAttribute("width"))));
+		ResetLines(l_SVG, l_Goal);
+		ResetMonths();
+		ResetPoints(l_SVG);
 
-	for(var i = 0; i < l_Lines.length; i++)
-		switch(l_Lines[i].id){
-			case "x-axis":
-				l_Lines[i].setAttribute("y2", String(l_Svg.clientHeight));
-				l_Lines[i].setAttribute("x1", String(l_Svg.clientLeft + 1));
-				l_Lines[i].setAttribute("x2", String(l_Svg.clientLeft + 1));
-				break;
-			case "y-axis": 
-				l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
-				l_Lines[i].setAttribute("y1", String(l_Svg.clientHeight - 1));
-				l_Lines[i].setAttribute("y2", String(l_Svg.clientHeight - 1));
-				break;
-			default: 
-				l_LineNumber++;
-				l_Lines[i].setAttribute("x2", String(l_Svg.clientWidth));
-				l_Lines[i].setAttribute("y1", String(
-					l_Svg.clientHeight - l_LineNumber * l_Svg.clientHeight / l_Goal));
-				l_Lines[i].setAttribute("y2", String(
-					l_Svg.clientHeight - l_LineNumber * l_Svg.clientHeight / l_Goal));
-				break;
-		}
+		SetPointPositions(l_SVG, l_Goal);
+
+		l_GithubMark.setAttribute("x", String(
+			0.5 * l_SVG.clientWidth - 0.75 * parseInt(
+				l_GithubMark.getAttribute("width"))));
 }
 
-function UpdateTable(p_RepoName, p_PushedDate, p_CommitTotal, p_RepoURL = ''){
+function UpdateTable(p_RepoName, p_PushedDate, p_CommitTotal, p_RepoURL){
 	if(p_RepoName    == null || undefined || '') return;
 	if(p_CommitTotal == null || undefined || '') return;
 	if(p_PushedDate  == null || undefined || '') return;
@@ -89,17 +91,16 @@ function UpdateTable(p_RepoName, p_PushedDate, p_CommitTotal, p_RepoURL = ''){
 	const COLUMNS = 3;
 	var l_Table		 = document.getElementById("table-details");
 	var l_TableRow 	 = document.createElement("tr");
-	var l_button 	 = document.createElement("button");
 
-	l_button.innerHTML = p_RepoName;
-	l_button.value = p_RepoURL;
-
+	var l_button 	 	= document.createElement("button");
+	l_button.innerHTML 	= p_RepoName;
+	l_button.value 		= p_RepoURL;
 	l_button.addEventListener("click", event => {
 		window.open(event.target.value, "_self");
 	})
 
 	for(var i = 0; i < COLUMNS; i++){
-		var column = document.createElement("td");
+		let column = document.createElement("td");
 		switch(i){
 			case 0: column.appendChild(l_button); break;
 			case 1: column.innerHTML = p_PushedDate; break;
@@ -110,28 +111,26 @@ function UpdateTable(p_RepoName, p_PushedDate, p_CommitTotal, p_RepoURL = ''){
 	}
 	document.getElementById("table-details").appendChild(l_TableRow);
 	l_Table.appendChild(l_TableRow);
-
-	DrawChart();
 }
 
 export async function GetAndHandleRepos(url=''){
 	var l_User = await (await fetch(url)).json();
-	let l_RecentPushedRepos = [];
+	var l_RecentPushedRepos = [];
 	var l_Date = new Date();
 
 	l_User.forEach(repo => {
-		var repoCentralTime = convertTZ(repo.pushed_at, 'America/Chicago');
+		let repoCentralTime = convertTZ(repo.pushed_at, 'America/Chicago');
 		if(repoCentralTime.getFullYear() === l_Date.getFullYear()) 
 			l_RecentPushedRepos.push(repo);
 	});
 
 	l_RecentPushedRepos.forEach(async function(repo){
-		var cTZ = convertTZ(repo.pushed_at, 'America/Chicago');
-		var commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
+		let cTZ = convertTZ(repo.pushed_at, 'America/Chicago');
+		let commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
 		let recentCommits = [];
 
 		commits.forEach(commit => {
-			var commitCentralTime = convertTZ(commit.commit.author.date, 'America/Chicago');
+			let commitCentralTime = convertTZ(commit.commit.author.date, 'America/Chicago');
 
 			if(commitCentralTime.getFullYear() == l_Date.getFullYear()) {
 				recentCommits.push(commit);
@@ -140,5 +139,6 @@ export async function GetAndHandleRepos(url=''){
 		})
 		
 		UpdateTable(repo.name, cTZ.toDateString(), recentCommits.length, repo.html_url);
+		DrawChart();
 	})
 }
