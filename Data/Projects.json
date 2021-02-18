@@ -1,0 +1,25 @@
+{
+    "Brains: GraveyardBound": {
+        "name": "ProjectName",
+        "type":"Student",
+        "role":"Programmer",
+        "term":"Fall of 2018 - Spring of 2019",
+        "location":"Here",
+        "team-size":10,
+
+        "technologies": [
+
+        ],
+
+        "responsibilities":[
+
+        ],
+
+        "key-achievements":[
+
+        ]
+    },
+    "":{
+
+    }
+}
