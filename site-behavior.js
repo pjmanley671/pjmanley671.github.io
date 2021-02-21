@@ -1,4 +1,39 @@
-import {GetAndHandleRepos, DrawChart} from './scripts/GitChart.js'
+import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/GitChart.js'
+import * as Utils from './scripts/Utils.js'
+
+async function GetAndHandleRepos(url=''){
+	var l_User = await (await fetch(url)).json();
+	var l_RecentPushedRepos = [], 
+      l_commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
+	var l_Date = new Date();
+  var l_btn;
+
+	l_User.forEach(repo => {
+		let repoCentralTime = Utils.convertTZ(repo.pushed_at, 'America/Chicago');
+		if(repoCentralTime.getFullYear() === l_Date.getFullYear()) l_RecentPushedRepos.push(repo);
+	})
+
+	l_RecentPushedRepos.forEach(async function(repo){
+		let cTZ = Utils.convertTZ(repo.pushed_at, 'America/Chicago');
+		let commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
+		let recentCommits = [];
+
+		commits.forEach(cmt => {
+			let commitCentralTime = Utils.convertTZ(cmt.commit.author.date, 'America/Chicago');
+
+			if(commitCentralTime.getFullYear() == l_Date.getFullYear()) {
+				recentCommits.push(cmt);
+				l_commitCount[commitCentralTime.getMonth()] += 1;
+			}
+		})
+		l_btn = Utils.GenerateLinkButton(repo.name, repo.html_url);
+		UpdateTable(l_btn, cTZ.toDateString(), recentCommits.length);
+    DrawChart();
+	})
+  UpdateCommitCount(l_commitCount);
+  //DrawChart();
+}
+
 
 const Resize = () =>{
   switch(document.getElementById("page-name").innerHTML){
@@ -10,7 +45,7 @@ const Resize = () =>{
   }
 }
 
-function PageLoad() {
+const PageLoad = () => {
 	switch(document.getElementById("page-name").innerHTML)
 	{
 		case "Paul Manley - Portfolio":
@@ -23,32 +58,3 @@ function PageLoad() {
 
 window.onload = PageLoad;
 window.onresize = Resize;
-
-
-/*
- * https://stackoverflow.com/questions/17147821/how-to-make-a-whole-row-in-a-table-clickable-as-a-link
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
-
-<table class="table table-hover">
-  <tbody>
-    <tr style="transform: rotate(0);">
-    <th scope="row"><a href="#" class="stretched-link">1</a></th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table> 
- */
