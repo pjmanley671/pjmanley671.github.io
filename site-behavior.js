@@ -1,12 +1,13 @@
-import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/GitChart.js'
-import * as Utils from './scripts/Utils.js'
+import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/gitchart.js'
+import * as Utils from './scripts/utils.js'
+import Config from './Data/Config.js'
 
 async function GetAndHandleRepos(url=''){
 	var l_User = await (await fetch(url)).json();
 	var l_RecentPushedRepos = [], 
       l_commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
 	var l_Date = new Date();
-  var l_btn;
+	var l_btn;
 
 	l_User.forEach(repo => {
 		let repoCentralTime = Utils.convertTZ(repo.pushed_at, 'America/Chicago');
@@ -31,9 +32,15 @@ async function GetAndHandleRepos(url=''){
     DrawChart();
 	})
   UpdateCommitCount(l_commitCount);
-  //DrawChart();
 }
 
+function GenerateHeaderButtons(){
+	var drpdwn = document.getElementById("dropdown-content");
+	Config.Links.forEach(perlen => {
+		if(perlen.Confirmation.message_format === "Perlenspiel")
+			drpdwn.appendChild(Utils.GenerateLinkButton(perlen.name, perlen.link, perlen.Confirmation.confirm))
+	})
+}
 
 const Resize = () =>{
   switch(document.getElementById("page-name").innerHTML){
@@ -46,6 +53,7 @@ const Resize = () =>{
 }
 
 const PageLoad = () => {
+	GenerateHeaderButtons();
 	switch(document.getElementById("page-name").innerHTML)
 	{
 		case "Paul Manley - Portfolio":

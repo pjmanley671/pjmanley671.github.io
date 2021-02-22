@@ -8,28 +8,8 @@
 		<link rel="stylesheet" href="styles/default.css"/> <link rel="stylesheet" href="styles/header.css"/><link rel="stylesheet" href="styles/GitChart.css"/>
 		<script type="module" src="site-behavior.js"></script>
 
-		<script>
-			function ConfirmRedirect(localURL, localIdentifier = ''){
-				var message = null;
-				var confirmation = true;
-				switch(localIdentifier){
-					case "Perlinspiel": message=
-						"This page uses Perlenspiel Browser Engine which requires strict html control and is not setup by me aside from what is permittable." +
-						"\n\nAre you sure you want to redirect?"; 
-						break;
-					default: 
-						break;
-				}
+		<link rel="icon" href="data:,">
 
-				if(message != null)
-					confirmation = confirm(message);
-
-				if(confirmation)
-					window.location.replace(localURL);
-			}
-		</script>
-
-		<link rel="icon" href="data:,"> <!-- Circumvents Favicon.ico issue ==> https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests -->
 		<title id="page-name">Paul Manley - Portfolio</title>
 	</head>
 	
@@ -39,15 +19,12 @@
 				<a class="active" href="#"><i class="fa fa-fw fa-home"></i> </a>
 				<a href="#"><i class="fa fa-fw fa-envelope"></i> </a>
 				<a href="#"><i class="fa fa-fw fa-search"></i> CV</a>
-				<div class="dropdown">
+				<div class="dropdown" id="dropdown">
 					<button class="dropbtn">Play Something
 					  <i class="fa fa-caret-down"></i>
-					</button>
-					<div class="dropdown-content">
-					  <button onclick="ConfirmRedirect('./pages/SlidingPuzzle.html', 'Perlinspiel')">Sliding Puzzle</button>
-					  <button onclick="ConfirmRedirect('./pages/ColorLock.html', 'Perlinspiel')">ColorLock</button>
-					  <button onclick="ConfirmRedirect('./pages/SpaceInvaders.html', 'Perlinspiel')">Two Player Space Invader</button>
-					</div>
+						</button>
+					<div class="dropdown-content" id="dropdown-content">
+						</div>
 				  </div>
 				</div>
 			</header>
@@ -62,12 +39,12 @@
 				<br />
 				<svg id="chart">
 					<image id="GithubMark" width="100" href="./icons/External_Marks/GitHub-Mark-120px-plus.png" opacity=".2"/>
-					<g id="CircleGroup" fill="purple" stroke="indigo" stroke-width="2"> <!-- Chart Points -->
+					<g id="CircleGroup" fill="purple" stroke="indigo" stroke-width="2">
 						<circle r="8" /> <circle r="8" /> <circle r="8" />
 						<circle r="8" /> <circle r="8" /> <circle r="8" />
 						<circle r="8" /> <circle r="8" /> <circle r="8" />
 						<circle r="8" /> <circle r="8" /> <circle r="8" /></g>
-					<g id="LineGroup" stroke="gray"> <!-- Chart Lines including 0 lines-->
+					<g id="LineGroup" stroke="gray">
 						<line id="x-axis" x1="0" y1="0" x2="1" y2="480" stroke="black" stroke-width="2"/>
 						<line id="y-axis" x1="0" y1="149" x2="480" y2="149" stroke="black" stroke-width="2"/>
 						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
@@ -81,7 +58,7 @@
 						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/>
 						<line x1="0" y1="149" x2="480" y2="149" opacity=".4"/></g></svg>
 				<svg id="chart-x-definitions" style="height: 50px;">
-					<g font-size="12" fill="black"> <!-- Months -->
+					<g font-size="12" fill="black">
 						<text x="10" y="10">Jan.</text>
 						<text x="70" y="10">Feb.</text>
 						<text x="125" y="10">Mar.</text>
