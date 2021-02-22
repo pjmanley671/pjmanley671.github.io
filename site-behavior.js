@@ -1,5 +1,5 @@
-import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/gitchart.js'
-import * as Utils from './scripts/utils.js'
+import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/GitChart.js'
+import * as Utils from './scripts/Utils.js'
 import Config from './Data/Config.js'
 
 async function GetAndHandleRepos(url=''){
@@ -35,13 +35,13 @@ async function GetAndHandleRepos(url=''){
 }
 
 function GenerateHeaderButtons(){
-	var navbar = document.getElementById("navbar");
+	// var navbar = document.getElementById("navbar");
 	var drpdwn = document.getElementById("dropdown-content");
 
-	Config.Links.forEach(navLink => {
+/* 	Config.Links.forEach(navLink => {
 		if(navLink.Confirmation.message_format === "Navbar")
 			navbar.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
-	})
+	}) */
 
 	Config.Links.forEach(perlen => {
 		if(perlen.Confirmation.message_format === "Perlenspiel")
