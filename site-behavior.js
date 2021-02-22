@@ -39,12 +39,8 @@ function GenerateHeaderButtons(){
 	var drpdwn = document.getElementById("dropdown-content");
 
 	Config.Links.forEach(navLink => {
-		if(navLink.Confirmation.message_format === "Navbar"){
-			var l_link = (document.location.pathname === "/") ? "" : ".";
-			l_link = l_link + navLink.link;
-			var l_btn = Utils.GenerateLinkButton(navLink.name, l_link, navLink.Confirmation.confirm);
-			navbar.appendChild(l_btn);
-		}
+		if(navLink.Confirmation.message_format === "Navbar")
+			navbar.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
 	})
 
 	Config.Links.forEach(perlen => {

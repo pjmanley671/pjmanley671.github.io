@@ -21,6 +21,11 @@ th, td
 	padding-left: 6px;
 }
 
+tr:nth-child(odd){
+	background-color: white;
+	color:black;
+}
+
 tr:first-child{
 	background-color: black;
 	color: violet;
@@ -41,6 +46,17 @@ tr:first-child{
 tr:nth-child(even) button:hover
 {
 	background-color: #E4D7E4;
+}
+
+tr:nth-child(odd) button{
+	width: 100%;
+	text-align: left;
+	border: none;
+	background-color: white;
+}
+
+tr:nth-child(odd) button:hover{
+	background-color: lightgoldenrodyellow;
 }
 
 #table-details td{
