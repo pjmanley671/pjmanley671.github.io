@@ -12,6 +12,10 @@ export default
             "name" : "Two player Space Invader",
             "link" : "./pages/SpaceInvaders.html",
             "Confirmation" : { "confirm" : true,"message_format" : "Perlenspiel" }
+        },{
+            "name" : "Home",
+            "link" : "./index.html",
+            "Confirmation" : { "confirm" : false,"message_format" : "Navbar" }
         }],
     "Experience" : [{
             "name": "Brains: GraveyardBound", "role": "Programmer", "type": "Student Project",

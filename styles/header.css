@@ -24,7 +24,20 @@
   .navbar .active {
 	background-color: #4CAF50;
   }
-  
+
+  .navbar button{
+	float: left;
+	text-align: center;
+	padding: 12px;
+	color: violet;
+	background-color: #555;
+	/* text-decoration: none; */
+	font-size: 20px;
+	border:none;
+  }
+  .navbar button:hover{
+	  background-color: black;
+  }  
   /* Add responsiveness - will automatically display the navbar vertically instead of horizontally on screens less than 500 pixels */
   @media screen and (max-width: 800px) {
 	.navbar a {
@@ -59,6 +72,9 @@
 	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1;
+	left:auto;
+	right:0;
+	margin-right:-10px;
   }
   
   /* Links inside the dropdown */

@@ -35,7 +35,18 @@ async function GetAndHandleRepos(url=''){
 }
 
 function GenerateHeaderButtons(){
+	var navbar = document.getElementById("navbar");
 	var drpdwn = document.getElementById("dropdown-content");
+
+	Config.Links.forEach(navLink => {
+		if(navLink.Confirmation.message_format === "Navbar"){
+			var l_link = (document.location.pathname === "/") ? "" : ".";
+			l_link = l_link + navLink.link;
+			var l_btn = Utils.GenerateLinkButton(navLink.name, l_link, navLink.Confirmation.confirm);
+			navbar.appendChild(l_btn);
+		}
+	})
+
 	Config.Links.forEach(perlen => {
 		if(perlen.Confirmation.message_format === "Perlenspiel")
 			drpdwn.appendChild(Utils.GenerateLinkButton(perlen.name, perlen.link, perlen.Confirmation.confirm))
