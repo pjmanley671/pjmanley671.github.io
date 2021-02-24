@@ -2,6 +2,26 @@ import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/GitChart.js'
 import * as Utils from './scripts/Utils.js'
 import Config from './Data/General.js'
 
+function OpenPage(elmnt, color) 
+{
+	//https://www.w3schools.com/howto/howto_js_full_page_tabs.asp
+	//http://davidbau.com/encode/seedrandom.js
+	//https://stackoverflow.com/questions/2117046/how-to-show-live-preview-in-a-small-popup-of-linked-page-on-mouse-over-on-link
+	var i, tabcontent, tablinks;
+	tabcontent = document.getElementsByClassName("flexbox-container");
+	for (i = 0; i < tabcontent.length; i++)
+		tabcontent[i].style.display = "none";
+
+	tablinks = document.getElementsByClassName("navbar-link");
+	for (i = 0; i < tablinks.length; i++)
+		tablinks[i].style.backgroundColor = "darkgray";
+	
+	document.getElementById(elmnt.innerHTML).style.display = "flex";
+	elmnt.style.backgroundColor = color;
+
+	console.log(elmnt);
+}
+
 async function GetAndHandleRepos(url=''){
 	var l_User = await (await fetch(url)).json();
 	var l_RecentPushedRepos = [], 
@@ -37,14 +57,22 @@ async function GetAndHandleRepos(url=''){
 function GenerateHeaderButtons(){
 	var navbar = document.getElementById("navbar");
 	var drpdwn = document.getElementById("dropdown-content");
-	console.log("GenerateHeaderButton")
 	Config.Links.forEach(navLink => {
-		console.log(navLink);
-		if(navLink.Confirmation.message_format === "Navbar")
-			navbar.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
-
-		if(navLink.Confirmation.message_format === "Perlenspiel")
-			drpdwn.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm))
+		switch(navLink.Confirmation.message_format){
+			case "Navbar": l_btn = Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm);
+				var l_btn = document.createElement("button");
+				l_btn.innerHTML = navLink.name;
+				l_btn.value = navLink.link;
+				l_btn.className = "navbark-link";
+				l_btn.addEventListener("click", event => {OpenPage(event.target, "black")})
+				navbar.appendChild(l_btn);
+				break;
+			case "Perlenspiel":
+				drpdwn.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
+				break;
+			default:
+				break;
+		}
 	})
 }
 
