@@ -1,6 +1,6 @@
 export default
 {
-    "Links" : [{
+    Links : [{
             "name" : "Sliding Puzzle",
             "link" : "./pages/SlidingPuzzle.html",
             "Confirmation" : { "confirm" : true, "message_format" : "Perlenspiel" }
@@ -17,7 +17,7 @@ export default
             "link" : "./index.html",
             "Confirmation" : { "confirm" : false,"message_format" : "Navbar" }
         }],
-    "Experience" : [{
+    Experience : [{
             "name": "Brains: GraveyardBound", "role": "Programmer", "type": "Student Project",
             "term_start": "August of 2018", "term_end": "May of 2019",
             "tech": ["Unity", "C#", "Github", "Git"],
