@@ -1,6 +1,6 @@
 import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/GitChart.js'
 import * as Utils from './scripts/Utils.js'
-import Config from './Data/Config.js'
+import Config from './Data/General.js'
 
 async function GetAndHandleRepos(url=''){
 	var l_User = await (await fetch(url)).json();
@@ -35,17 +35,16 @@ async function GetAndHandleRepos(url=''){
 }
 
 function GenerateHeaderButtons(){
-	// var navbar = document.getElementById("navbar");
+	var navbar = document.getElementById("navbar");
 	var drpdwn = document.getElementById("dropdown-content");
-
-/* 	Config.Links.forEach(navLink => {
+	console.log("GenerateHeaderButton")
+	Config.Links.forEach(navLink => {
+		console.log(navLink);
 		if(navLink.Confirmation.message_format === "Navbar")
 			navbar.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
-	}) */
 
-	Config.Links.forEach(perlen => {
-		if(perlen.Confirmation.message_format === "Perlenspiel")
-			drpdwn.appendChild(Utils.GenerateLinkButton(perlen.name, perlen.link, perlen.Confirmation.confirm))
+		if(navLink.Confirmation.message_format === "Perlenspiel")
+			drpdwn.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm))
 	})
 }
 
