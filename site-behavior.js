@@ -4,9 +4,6 @@ import Config from './Data/General.js'
 
 function OpenPage(elmnt, color) 
 {
-	//https://www.w3schools.com/howto/howto_js_full_page_tabs.asp
-	//http://davidbau.com/encode/seedrandom.js
-	//https://stackoverflow.com/questions/2117046/how-to-show-live-preview-in-a-small-popup-of-linked-page-on-mouse-over-on-link
 	var i, tabcontent, tablinks;
 	tabcontent = document.getElementsByClassName("flexbox-container");
 	for (i = 0; i < tabcontent.length; i++)
@@ -14,12 +11,10 @@ function OpenPage(elmnt, color)
 
 	tablinks = document.getElementsByClassName("navbar-link");
 	for (i = 0; i < tablinks.length; i++)
-		tablinks[i].style.backgroundColor = "darkgray";
+		tablinks[i].style.backgroundColor = "#555";
 	
 	document.getElementById(elmnt.innerHTML).style.display = "flex";
 	elmnt.style.backgroundColor = color;
-
-	console.log(elmnt);
 }
 
 async function GetAndHandleRepos(url=''){
@@ -56,17 +51,20 @@ async function GetAndHandleRepos(url=''){
 
 function GenerateHeaderButtons(){
 	var navbar = document.getElementById("navbar");
+	var pages = document.getElementsByClassName("flexbox-container");
+	var l_btn;
+	for(var i = 0; i < pages.length; i++){
+		l_btn = document.createElement("button");
+		l_btn.innerHTML = pages[i].id;
+		l_btn.className = "navbar-link";
+		if(l_btn.innerHTML == "Home") l_btn.style.backgroundColor = "black";
+		l_btn.addEventListener("click", event => {OpenPage(event.target, "black")})
+		navbar.appendChild(l_btn);
+	}
+
 	var drpdwn = document.getElementById("dropdown-content");
 	Config.Links.forEach(navLink => {
 		switch(navLink.Confirmation.message_format){
-			case "Navbar": l_btn = Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm);
-				var l_btn = document.createElement("button");
-				l_btn.innerHTML = navLink.name;
-				l_btn.value = navLink.link;
-				l_btn.className = "navbark-link";
-				l_btn.addEventListener("click", event => {OpenPage(event.target, "black")})
-				navbar.appendChild(l_btn);
-				break;
 			case "Perlenspiel":
 				drpdwn.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
 				break;
@@ -77,26 +75,26 @@ function GenerateHeaderButtons(){
 }
 
 const Resize = () =>{
-  switch(document.getElementById("page-name").innerHTML){
-    case "Paul Manley - Portfolio":
-      DrawChart();
-      break;
-    default:
-       break;
-  }
+	DrawChart();
+/* 	var tabInfo = document.getElementsByClassName("navbar-link");
+	for(var i = 0; i < tabInfo.length; i++){
+		switch(tabInfo[i].innerHTML){
+			case "Home":
+				if(tabInfo[i].style.backgroundColor == "black") DrawChart();
+				break;
+			default:
+				break;
+		}
+	} */
 }
 
 const PageLoad = () => {
 	GenerateHeaderButtons();
-	switch(document.getElementById("page-name").innerHTML)
-	{
-		case "Paul Manley - Portfolio":
-			GetAndHandleRepos('https://api.github.com/users/pjmanley671/repos');
-			break;
-		default:
-			break;
-	}
+	GetAndHandleRepos('https://api.github.com/users/pjmanley671/repos');
 }
 
 window.onload = PageLoad;
 window.onresize = Resize;
+
+//http://davidbau.com/encode/seedrandom.js
+//https://stackoverflow.com/questions/2117046/how-to-show-live-preview-in-a-small-popup-of-linked-page-on-mouse-over-on-link
