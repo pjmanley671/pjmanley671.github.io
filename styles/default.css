@@ -10,24 +10,13 @@ body {
 	font-family: sans-serif;
 }
 
-header{
-	display: block;
-}
+header{ display: block; }
 
-.flexbox-container{
-	display: flex;
-	height: 100%;
-}
+.flexbox-container{ display: flex; height: 100%; }
 
-.flexbox-container div{
-	display:inline;
-	width: 50%;
-	margin-left: 5%;
-}
+.section{ width: 50%; display: inline; }
 
-aside{
-	display:inline;
-}
+.aside{ width: 45%; display: block; }
 
 footer{
 	float:none;
@@ -36,13 +25,8 @@ footer{
 	width:100%;
 }
 
-a{
-	text-decoration: none;
-	color: black;
-}
-
 @media screen and (max-width: 800px){
-	.flexbox-container{
-		display:inline-block;
-	}
+	.flexbox-container{ display:inline-block; }
+
+	.aside{ width: 45%; display: inline; }
 }

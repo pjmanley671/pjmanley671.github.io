@@ -1,68 +1,32 @@
-aside{
-	width: 35%;
-	height: auto;
-}
-
 svg, table{
 	width: 100%;
 	height: auto;
 	border-collapse: collapse;
 }
 
-svg image
-{
-	height: 100%;
-	width: auto;
-}
+svg image{ height: 100%; width: auto; }
 
-th, td
-{
-	text-align: left;
-	padding-left: 6px;
-}
+th, td{ text-align: left; padding-left: 6px; }
 
-tr:nth-child(odd){
-	background-color: white;
-	color:black;
-}
-
-tr:first-child{
-	background-color: black;
-	color: violet;
-  }
-  tr:nth-child(even){
-	  background-color:thistle;
-	  color:black;
-  }
-
-  tr:nth-child(even) button
-{
-	width: 100%;
-	text-align: left;
-	border: none;
-	background-color: thistle;
-}
-
-tr:nth-child(even) button:hover
-{
-	background-color: #E4D7E4;
-}
-
+tr:nth-child(odd){ background-color: white; color:black; }
 tr:nth-child(odd) button{
 	width: 100%;
 	text-align: left;
 	border: none;
 	background-color: white;
 }
+tr:nth-child(odd) button:hover{ background-color: lightgoldenrodyellow; }
 
-tr:nth-child(odd) button:hover{
-	background-color: lightgoldenrodyellow;
-}
+tr:first-child{ background-color: black; color: violet; }
 
-#table-details td{
-	border-right: 1px solid white;
+tr:nth-child(even){ background-color:thistle; color:black; }
+tr:nth-child(even) button{ 
+	width: 100%;
+	text-align: left;
+	border: none;
+	background-color: thistle;
 }
+tr:nth-child(even) button:hover{ background-color: #E4D7E4; }
 
-#table-details td:nth-child(3){
-	border-right:none;
-}
+#table-details td{ border-right: 1px solid white; }
+#table-details td:nth-child(3){ border-right:none; }

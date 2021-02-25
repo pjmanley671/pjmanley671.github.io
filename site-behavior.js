@@ -2,41 +2,25 @@ import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/GitChart.js'
 import * as Utils from './scripts/Utils.js'
 import Config from './Data/General.js'
 
-function OpenPage(elmnt, color) 
-{
-	var i, tabcontent, tablinks;
-	tabcontent = document.getElementsByClassName("flexbox-container");
-	for (i = 0; i < tabcontent.length; i++)
-		tabcontent[i].style.display = "none";
-
-	tablinks = document.getElementsByClassName("navbar-link");
-	for (i = 0; i < tablinks.length; i++)
-		tablinks[i].style.backgroundColor = "#555";
-	
-	document.getElementById(elmnt.innerHTML).style.display = "flex";
-	elmnt.style.backgroundColor = color;
-}
-
 async function GetAndHandleRepos(url=''){
-	var l_User = await (await fetch(url)).json();
-	var l_RecentPushedRepos = [], 
-      l_commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
-	var l_Date = new Date();
-	var l_btn;
+	var l_User, l_commitCount, l_RecentPushedRepos, l_Date, l_btn;
+	const TIMEZONE = 'America/Chicago';
 
+	l_User = await (await fetch(url)).json();
+	l_Date = new Date(); l_RecentPushedRepos = [];
 	l_User.forEach(repo => {
-		let repoCentralTime = Utils.convertTZ(repo.pushed_at, 'America/Chicago');
+		let repoCentralTime = Utils.convertTZ(repo.pushed_at, TIMEZONE);
 		if(repoCentralTime.getFullYear() === l_Date.getFullYear()) l_RecentPushedRepos.push(repo);
 	})
 
+	l_commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
 	l_RecentPushedRepos.forEach(async function(repo){
-		let cTZ = Utils.convertTZ(repo.pushed_at, 'America/Chicago');
+		let cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
 		let commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
 		let recentCommits = [];
 
 		commits.forEach(cmt => {
-			let commitCentralTime = Utils.convertTZ(cmt.commit.author.date, 'America/Chicago');
-
+			let commitCentralTime = Utils.convertTZ(cmt.commit.author.date, TIMEZONE);
 			if(commitCentralTime.getFullYear() == l_Date.getFullYear()) {
 				recentCommits.push(cmt);
 				l_commitCount[commitCentralTime.getMonth()] += 1;
@@ -50,42 +34,28 @@ async function GetAndHandleRepos(url=''){
 }
 
 function GenerateHeaderButtons(){
-	var navbar = document.getElementById("navbar");
-	var pages = document.getElementsByClassName("flexbox-container");
-	var l_btn;
+	var navbar, pages, drpdwn, l_btn;
+	navbar = document.getElementById("navbar");
+	pages = document.getElementsByClassName("flexbox-container");
+
 	for(var i = 0; i < pages.length; i++){
 		l_btn = document.createElement("button");
 		l_btn.innerHTML = pages[i].id;
 		l_btn.className = "navbar-link";
 		if(l_btn.innerHTML == "Home") l_btn.style.backgroundColor = "black";
-		l_btn.addEventListener("click", event => {OpenPage(event.target, "black")})
+		l_btn.addEventListener("click", event => {Utils.OpenPage(event.target, "black")})
 		navbar.appendChild(l_btn);
 	}
 
-	var drpdwn = document.getElementById("dropdown-content");
+	drpdwn = document.getElementById("dropdown-content");
 	Config.Links.forEach(navLink => {
-		switch(navLink.Confirmation.message_format){
-			case "Perlenspiel":
-				drpdwn.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
-				break;
-			default:
-				break;
-		}
+		if(navLink.Confirmation.message_format == "Perlenspiel")
+		drpdwn.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
 	})
 }
 
 const Resize = () =>{
 	DrawChart();
-/* 	var tabInfo = document.getElementsByClassName("navbar-link");
-	for(var i = 0; i < tabInfo.length; i++){
-		switch(tabInfo[i].innerHTML){
-			case "Home":
-				if(tabInfo[i].style.backgroundColor == "black") DrawChart();
-				break;
-			default:
-				break;
-		}
-	} */
 }
 
 const PageLoad = () => {

@@ -1,11 +1,8 @@
-/* https://www.w3schools.com/howto/howto_css_navbar_icon.asp */
 .navbar {
 	width: 100%;
 	background-color: #555;
 	overflow: auto;
-  }
-
-  .navbar button{
+}.navbar button{
 	float: left;
 	text-align: center;
 	padding: 12px;
@@ -14,26 +11,10 @@
 	/* text-decoration: none; */
 	font-size: 17px;
 	border:none;
-  }
-  .navbar button:hover{
-	  background-color: black;
-  }  
-  /* Add responsiveness - will automatically display the navbar vertically instead of horizontally on screens less than 500 pixels */
-  @media screen and (max-width: 800px) {
-	.navbar a {
-	  float: none;
-	  display: block;
-	}
-  }
+  }.navbar button:hover{ background-color: black; }
 
-  /* The dropdown container */
-.dropdown {
-	float: right;
-	overflow: hidden;
-  }
-  
-  /* Dropdown button */
-  .dropdown .dropbtn {
+.dropdown { float: right; overflow: hidden; }
+.dropdown .dropbtn {
 	font-size: 16px;
 	border: none;
 	outline: none;
@@ -42,9 +23,8 @@
 	background-color: inherit;
 	font-family: inherit; /* Important for vertical align on mobile phones */
 	margin: 0; /* Important for vertical align on mobile phones */
-  }
+  }.dropdown:hover .dropdown-content { display: block; }
 
-  /* Dropdown content (hidden by default) */
 .dropdown-content {
 	display: none;
 	position: absolute;
@@ -55,10 +35,8 @@
 	left:auto;
 	right:0;
 	margin-right:-10px;
-  }
-  
-  /* Links inside the dropdown */
-  .dropdown-content button {
+	margin-top:45px;
+  }.dropdown-content button {
 	float: none;
 	color: black;
 	background-color: white;
@@ -69,14 +47,9 @@
 	width:100%;
 	border: none;
 	border-top: 1px solid darkgray;
-  }
+  }.dropdown-content button:hover { background-color:#E4D7E4; }
 
-  /* Add a grey background color to dropdown links on hover */
-.dropdown-content button:hover {
-	background-color:#E4D7E4;
-  }
-  
-  /* Show the dropdown menu on hover */
-  .dropdown:hover .dropdown-content {
-	display: block;
-  }
+    /* Add responsiveness - will automatically display the navbar vertically instead of horizontally on screens less than 500 pixels */
+@media screen and (max-width: 800px) {
+	.navbar a { float: none; display: block; }
+}

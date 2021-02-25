@@ -19,3 +19,17 @@ export function GenerateLinkButton(p_Text, p_Url, p_confirm = false)
 
     return l_btn;
 }
+
+export function OpenPage(elmnt, color) {
+	var i, tabcontent, tablinks;
+	tabcontent = document.getElementsByClassName("flexbox-container");
+	for (i = 0; i < tabcontent.length; i++)
+		tabcontent[i].style.visibility = "hidden";
+
+	tablinks = document.getElementsByClassName("navbar-link");
+	for (i = 0; i < tablinks.length; i++)
+		tablinks[i].style.backgroundColor = "#555";
+	
+	document.getElementById(elmnt.innerHTML).style.visibility = "visible";
+	elmnt.style.backgroundColor = color;
+}
