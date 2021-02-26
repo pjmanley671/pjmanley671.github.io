@@ -4,8 +4,7 @@ export function convertTZ(date, tzString){
 		new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
 }
 
-export function GenerateLinkButton(p_Text, p_Url, p_confirm = false)
-{
+export function GenerateLinkButton(p_Text, p_Url, p_confirm = false){
     var l_btn = document.createElement("button");
 	l_btn.innerHTML = p_Text;
     l_btn.value = p_Url;

@@ -1,101 +1,105 @@
 var g_Commits = new Uint32Array(document.getElementById("CircleGroup").children.length);
 
 function ResetMonths(){
-	var l_SVG = document.getElementById("chart-x-definitions"),
-		l_Months = l_SVG.children[0],
-		l_XOffset	= l_SVG.clientWidth / 50,
-		l_XDist = l_SVG.clientWidth / l_Months.children.length;
+	var svg, months, xOffset, xDist;
 
-	for(let i = 0; i < l_Months.children.length; i++)
-		l_Months.children[i].setAttribute("x", String(i * l_XDist + l_XOffset));
+	svg = document.getElementById("chart-x-definitions");
+	months = svg.children[0];
+	xOffset	= svg.clientWidth / 50;
+	xDist = svg.clientWidth / months.children.length;
+
+	for(let i = 0; i < months.children.length; i++)
+		months.children[i].setAttribute("x", String(i * xDist + xOffset));
 }
 
-function ResetPoints(p_SVG){
-	var l_Points = document.getElementById("CircleGroup").children,
-		l_XOffset= p_SVG.clientWidth / 30;
+function ResetPoints(pSVG){
+	var points = document.getElementById("CircleGroup").children,
+		xOffset= pSVG.clientWidth / 30;
 	
-	for(let p = 0; p < l_Points.length; p++){
-		l_Points[p].setAttribute("cx", String(p * p_SVG.clientWidth / l_Points.length + l_XOffset));
-		l_Points[p].setAttribute("cy", String(p_SVG.clientHeight));
+	for(let p = 0; p < points.length; p++){
+		points[p].setAttribute("cx", String(p * pSVG.clientWidth / points.length + xOffset));
+		points[p].setAttribute("cy", String(pSVG.clientHeight));
 	}
 }
 
-function SetPointPositions(p_SVG, p_Goal){
-	var l_Points = document.getElementById("CircleGroup").children;
-	var yDist = p_SVG.clientHeight / p_Goal;
+function SetPointPositions(pSVG, pGoal){
+	var points = document.getElementById("CircleGroup").children;
+	var yDist = pSVG.clientHeight / pGoal;
 
-	for(let i = 0; i < l_Points.length; i++){
-		let height = p_SVG.clientHeight - g_Commits[i] * yDist;
-		if(height < 0) height += Math.floor(g_Commits[i] / p_Goal) * p_Goal * yDist;
-		l_Points[i].setAttribute("cy", String(height));
+	for(let i = 0; i < points.length; i++){
+		let height = pSVG.clientHeight - g_Commits[i] * yDist;
+		if(height < 0) height += Math.floor(g_Commits[i] / pGoal) * pGoal * yDist;
+		points[i].setAttribute("cy", String(height));
 	}
 }
 
-function ResetLines(p_SVG, p_Goal){
+function ResetLines(pSVG, pGoal){
 	const ONE = 1;
-	var l_LineNumber= 0,
-		l_Lines 	= document.getElementById("LineGroup").children;
+	var lineNumber, lines;
 
-	for(let i = 0; i < l_Lines.length; i++)
-		switch(l_Lines[i].id){
+	lineNumber = 0;
+	lines = document.getElementById("LineGroup").children;
+	for(let i = 0; i < lines.length; i++)
+		switch(lines[i].id){
 			case "x-axis":
-				l_Lines[i].setAttribute("y2", String(p_SVG.clientHeight));
-				l_Lines[i].setAttribute("x1", String(p_SVG.clientLeft + ONE));
-				l_Lines[i].setAttribute("x2", String(p_SVG.clientLeft + ONE));
+				lines[i].setAttribute("y2", String(pSVG.clientHeight));
+				lines[i].setAttribute("x1", String(pSVG.clientLeft + ONE));
+				lines[i].setAttribute("x2", String(pSVG.clientLeft + ONE));
 				break;
 			case "y-axis": 
-				l_Lines[i].setAttribute("x2", String(p_SVG.clientWidth));
-				l_Lines[i].setAttribute("y1", String(p_SVG.clientHeight - ONE));
-				l_Lines[i].setAttribute("y2", String(p_SVG.clientHeight - ONE));
+				lines[i].setAttribute("x2", String(pSVG.clientWidth));
+				lines[i].setAttribute("y1", String(pSVG.clientHeight - ONE));
+				lines[i].setAttribute("y2", String(pSVG.clientHeight - ONE));
 				break;
 			default: 
-				l_LineNumber++;
-				l_Lines[i].setAttribute("x2", String(p_SVG.clientWidth));
-				l_Lines[i].setAttribute(
-					"y1", String(p_SVG.clientHeight - l_LineNumber * p_SVG.clientHeight / p_Goal));
-				l_Lines[i].setAttribute(
-					"y2", String(p_SVG.clientHeight - l_LineNumber * p_SVG.clientHeight / p_Goal));
+				lineNumber++;
+				lines[i].setAttribute("x2", String(pSVG.clientWidth));
+				lines[i].setAttribute(
+					"y1", String(pSVG.clientHeight - lineNumber * pSVG.clientHeight / pGoal));
+				lines[i].setAttribute(
+					"y2", String(pSVG.clientHeight - lineNumber * pSVG.clientHeight / pGoal));
 				break;
 		}
 }
 
 export function DrawChart(){
-	var l_SVG		= document.getElementById("chart"),
-		l_Goal		= 10, 
-		l_GithubMark= l_SVG.children[0];
+	var svg, goal, githubmark;
 
-	ResetLines(l_SVG, l_Goal);
+	goal = 10;
+	svg = document.getElementById("chart");
+
+	ResetLines(svg, goal);
 	ResetMonths();
-	ResetPoints(l_SVG);
-	SetPointPositions(l_SVG, l_Goal);
-	l_GithubMark.setAttribute(
-		"x", String(0.5 * l_SVG.clientWidth - 0.75 *
-			parseInt(l_GithubMark.getAttribute("width"))));
+	ResetPoints(svg);
+	SetPointPositions(svg, goal);
+
+	githubmark = svg.children[0];
+	l_GithubMark.setAttribute( "x",
+		String(0.5 * svg.clientWidth - 0.75 
+			* parseInt(githubmark.getAttribute("width"))));
 }
 
-export function UpdateTable(p_btn = {}, p_PushedDate, p_CmtTtl){
-	if(p_btn		== null || undefined || '') return;
-	if(p_CmtTtl		== null || undefined || '') return;
-	if(p_PushedDate	== null || undefined || '') return;
+export function UpdateTable(pBtn = {}, pPushedDate, pCmtTtl){
+	if(pBtn == null || undefined || '') return;
+	if(pCmtTtl == null || undefined || '') return;
+	if(pPushedDate	== null || undefined || '') return;
 
-	const COLUMNS 	= 3;
-	var l_Table		= document.getElementById("table-details"),
-		l_TableRow 	= document.createElement("tr");
-
+	const COLUMNS = 3;
+	var table, tableRow;
+	
+	tableRow = document.createElement("tr");
 	for(let i = 0; i < COLUMNS; i++){
 		let column = document.createElement("td");
 		switch(i){
-			case 0: column.appendChild(p_btn); break;
-			case 1: column.innerHTML = p_PushedDate; break;
-			case 2: column.innerHTML = p_CmtTtl.toString(); break;
+			case 0: column.appendChild(pBtn); break;
+			case 1: column.innerHTML = pPushedDate; break;
+			case 2: column.innerHTML = pCmtTtl.toString(); break;
 			default: break;
 		}
-		l_TableRow.appendChild(column);
+		tableRow.appendChild(column);
 	}
-	document.getElementById("table-details").appendChild(l_TableRow);
-	l_Table.appendChild(l_TableRow);
+	table = document.getElementById("table-details");
+	table.appendChild(tableRow);
 }
 
-export function UpdateCommitCount(p_CmtCnt){
-	g_Commits = p_CmtCnt;
-}
+export function UpdateCommitCount(pNums){ g_Commits = pNums; }
