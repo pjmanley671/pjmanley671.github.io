@@ -21,305 +21,166 @@ You may have received a copy of the GNU Lesser General Public License
 along with the Perlenspiel devkit. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-This JavaScript file is a template for creating new Perlenspiel 3.3.x games.
-By default, all event-handling function templates are COMMENTED OUT (using block-comment syntax), and are therefore INACTIVE.
-Uncomment and add code to the event handlers required by your project.
-Any unused event-handling function templates can be safely deleted.
-Refer to the tutorials and documentation at <https://ps3.perlenspiel.net> for details.
-*/
-
-/*
-The following comment lines are for JSHint <https://jshint.com>, a tool for monitoring code quality.
-You may find them useful if your development environment is configured to support JSHint.
-If you don't use JSHint (or are using it with a configuration file), you can safely delete these lines.
-*/
-
-/* jshint browser : true, devel : true, esversion : 5, freeze : true */
-/* globals PS : true */
-
-/*
-PS.init( system, options )
-Called once after engine is initialized but before event-polling begins.
-This function doesn't have to do anything, although initializing the grid dimensions with PS.gridSize() is recommended.
-If PS.grid() is not called, the default grid dimensions (8 x 8 beads) are applied.
-Any value returned is ignored.
-[system : Object] = A JavaScript object containing engine and host platform information properties; see API documentation for details.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
-
-// UNCOMMENT the following code BLOCK to expose the PS.init() event handler:
-
-/* Original Author: Paul Manley
- * Objective: Make a game using perlenspiel.
- * Notes: 
- *		Project was originally a school project.
- *		In order for the game to run images need to be ran through a hosting server. This is a perlenspiel issue not my mistake.
- *		Original version used position data to check for collision.
- *
- * Going forward: 
- *		Add in image-based collision.
- *		Add in cover image for detailing player mechanics
- *		
- * Version: 5.0
- * Perlenspiel Package: 3.3
-*/
 var G = function(){
-	var winState = false;
-	var w = 32, h = 32;
-	var sTimer, uTimer, dTimer, gTimer;
-	var shotReady = false, ufoReady = false;
+	const src = "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/";
+	var shotT, ufoT, defenderT, gameT;
+	var ufoReady, winState;
+	const WIDTH=32, HEIGHT=32;
 	var shots = [], ufos = [];
-	var src = "https://pjmanley671.github.io/Perlin-Projects/SpaceInvaders/images/";
 
-	var makeShot = function(){
-		if(shotReady === false)return;
+	var myLoader = function(image){
+		switch(image.source.slice(src.length,image.source.length-4)){
+			case "BackGround":PS.imageBlit(image,0,0); break;
+			case "defenderBase":PS.imageBlit(image,defender.x-2,defender.y+1); break;
+			case "defenderBotMid":PS.imageBlit(image,defender.x-2,defender.y); break;
+			case "defenderTopMid":PS.imageBlit(image,defender.x-1,defender.y-1); break;
+			case "defenderTop":PS.imageBlit(image,defender.x-0,defender.y-2); break;
+			case "Shot":for(let i=0;i<shots.length;i++)PS.imageBlit(image,shots[i].x,shots[i].y); break;
+			case "UfoBase":for(let i=0;i<ufos.length;i++)PS.imageBlit(image,ufos[i].x-2,ufos[i].y+1); break;
+			case "UfoMid":for(let i=0;i<ufos.length;i++)PS.imageBlit(image,ufos[i].x-1,ufos[i].y); break;
+			case "UfoTop":for(let i=0;i<ufos.length;i++)PS.imageBlit(image,ufos[i].x,ufos[i].y-1); break;
+			default: break;
+		}
+	};
+	function DrawMap(){
+		PS.imageLoad(src+"BackGround.bmp",myLoader,1);
+		PS.imageLoad(src+"defenderBase.bmp",myLoader,2);
+		PS.imageLoad(src+"defenderBotMid.bmp",myLoader,2);
+		PS.imageLoad(src+"defenderTopMid.bmp",myLoader,2);
+		PS.imageLoad(src+"defenderTop.bmp",myLoader,2);
+		PS.imageLoad(src+"Shot.bmp",myLoader,2);
+		PS.imageLoad(src+"UfoBase.bmp",myLoader,2);
+		PS.imageLoad(src+"UfoMid.bmp",myLoader,2);
+		PS.imageLoad(src+"UfoTop.bmp",myLoader,2);
+	};
+	function UFOSpawnIsClear(){
+		for(let i=0; i<ufos.length; i++)if(ufos[i].CheckCollisionPoint(Math.floor(WIDTH/2),2))return false;
+		return true;
+	}
+	//#region Utility
+	function Destroy(pList, i){
+		if(i!==pList.length-1){let tmp=pList[i]; pList[i]=pList[pList.length-1]; pList[pList.length-1]=tmp;}
+		pList.pop();
+	};
+	function ClearList(pList){for(let i=pList.length;i>0;i--)pList.shift();};
+	//#endregion
 
-		var myShot = {
-				x : 0, y : 0,
-				setSpawn : function(sx, sy){
-                    this.x = sx;
-                    this.y = sy - 2;
-                },
-				move : function(cx, cy) {
-					this.x = this.x + cx;
-					this.y = this.y + cy;
-				}
-			};
-		myShot.setSpawn(defender.x, defender.y);
-		shots.unshift(myShot);
-		shotReady = false;
+	//#region Entities
+	MakeShot=function(){
+		var shot={
+			x:0, y:0,
+			SetSpawn:function(cx,cy){this.x=cx;this.y=cy;},
+			Move:function(){this.y--;},
+			InBounds:function(){(this.y<0)?false:true;}
+		};
+		shot.SetSpawn(defender.x, defender.y);
+		shots.unshift(shot);
+		defender.ability=false;
 		PS.audioPlay("fx_bang");
 	};
-
-	var makeUfo = function(){
-		if(ufoReady === false) return;
-		if(exports.inSpawn()) return;
-
-		var myUfo = {
-				x : 0, y : 0,
-				setSpawn : function(){
-					this.x = Math.floor(w / 2);
-					this.y = 2;
-				},
-
-				move : function(cx, cy){
-					if(exports.inBounds(this.x + cx, this.y + cy)){
-						if(exports.ufoCollision(this.x + cx, this.y + cy)) return;
-                        this.x = this.x + cx;
-                        this.y = this.y + cy;
-                        if(this.y >= h-4)winState = true;
-                    }
-				}
-			};
-		myUfo.setSpawn();
-		ufos.unshift(myUfo);
-		ufoReady = false;
-	};
-
 	var defender={
-			x : 0, y : 0,
-			setSpawn : function(){
-				this.x = Math.floor(w / 2);
-				this.y = (h - 3);
-			},
-			move : function(cx, cy){
-				if(exports.inBounds(this.x + cx, this.y + cy)){
-                    this.x = this.x + cx;
-                    this.y = this.y + cy;
-                }
-			}
-		};
-
-	var myLoader = function(image)
-	{
-		var i;
-		if(image.source === src + "BackGround.bmp")
-			PS.imageBlit(image, 0, 0);
-
-		if(image.source === src + "defenderBase.bmp")
-			PS.imageBlit(image, defender.x - 2, defender.y+1);
-		if(image.source === src + "defenderBotMid.bmp")
-			PS.imageBlit(image, defender.x - 2, defender.y);
-		if(image.source === src + "defenderTopMid.bmp")
-			PS.imageBlit(image, defender.x - 1, defender.y - 1);
-		if(image.source === src + "defenderTop.bmp")
-			PS.imageBlit(image, defender.x  - 0, defender.y - 2);
-
-		if(image.source === src + "Shot.bmp")
-			for(i = 0; i < shots.length; i++)
-				PS.imageBlit(image, shots[i].x, shots[i].y);
-
-		if(image.source === src + "UfoBase.bmp")
-			for(i = 0; i < ufos.length; i++)
-				PS.imageBlit(image, ufos[i].x-2, ufos[i].y+1);
-
-        if(image.source === src + "UfoMid.bmp")
-            for(i = 0; i < ufos.length; i++)
-                PS.imageBlit(image, ufos[i].x-1, ufos[i].y);
-
-        if(image.source === src + "UfoTop.bmp")
-        	for(i = 0; i < ufos.length; i++)
-        		PS.imageBlit(image, ufos[i].x, ufos[i].y-1);
+		x:0,y:0,ability:false,
+		SetSpawn:function(){
+			this.x=Math.floor(WIDTH/2);
+			this.y=HEIGHT-3;
+		},
+		InBounds:function(cx){return(cx-2<0||cx+2>WIDTH)?false:true;},
+		Move:function(x){if(this.InBounds(this.x+x))this.x+=x;}
 	};
-	var exports={
-		init : function(){
-			PS.gridSize(w, h);
-			PS.border(PS.ALL, PS.ALL, 0);
-			PS.statusText("UFO: Arrows + /, DEFCOM: WASD spacebar.");
-			winState = false;
-            ufoReady = true;
-            shotReady = true;
-			defender.setSpawn();
-			makeUfo();
-			sTimer = PS.timerStart(2, exports.shiftShots);
-			uTimer = PS.timerStart(160, exports.uAbility);
-			dTimer = PS.timerStart(4, exports.dAbility);
-			gTimer = PS.timerStart(1, exports.gameState);
-			exports.drawMap();
-		},
-		drawMap : function(){
-			PS.imageLoad(src + "BackGround.bmp", myLoader, 1);
-			PS.imageLoad(src + "defenderBase.bmp", myLoader, 2);
-			PS.imageLoad(src + "defenderBotMid.bmp", myLoader, 2);
-			PS.imageLoad(src + "defenderTopMid.bmp", myLoader, 2);
-			PS.imageLoad(src + "defenderTop.bmp", myLoader, 2);
-			PS.imageLoad(src + "Shot.bmp", myLoader, 2);
-			PS.imageLoad(src + "UfoBase.bmp", myLoader, 2);
-			PS.imageLoad(src + "UfoMid.bmp", myLoader, 2);
-			PS.imageLoad(src + "UfoTop.bmp", myLoader, 2);
-		},
-
-		pInput : function(key){
-			if(winState === false){
-                switch (key) {
-                    case 119: defender.move(0, 0); break;
-                    case 100: defender.move(1, 0); break;
-                    case 97: defender.move(-1, 0); break;
-                    case 115: defender.move(0, 0); break;
-                    case 32: makeShot(); break;
-                    default: break;
-                }
-
-                switch (key) {
-                    case PS.KEY_ARROW_UP: exports.shiftUfos(0, -1); break;
-                    case PS.KEY_ARROW_DOWN: exports.shiftUfos(0, 1); break;
-                    case PS.KEY_ARROW_RIGHT: exports.shiftUfos(1, 0); break;
-                    case PS.KEY_ARROW_LEFT: exports.shiftUfos(-1, 0); break;
-                    case 47: makeUfo(); break;
-                    default: break;
-                }
-            }else
-				switch (key){
-					case 114: exports.restart(); break; 
-				}
-                exports.drawMap();
+	MakeUFO = function(){
+		var ufo = {
+			x:0, y:0,
+			SetSpawn:function(){
+				this.x = Math.floor(WIDTH / 2);
+				this.y = 2;
 			},
-
-		shiftUfos:function(cx, cy){
-			var cLoc;
-			for(let i=0;i<ufos.length;i++){
-				ufos[i].move(cx, cy);
-				cLoc=exports.checkCollision(ufos[i],shots);
-				if(cLoc !== -1){
-					exports.destroy(shots, cLoc);
-					exports.destroy(ufos, i);
-				}
-			}
-		},
-		shiftShots:function(){
-			var i, cLoc;
-			for(i = 0; i < shots.length; i++){
-				shots[i].move(0, -1);
-				if(exports.inBounds(shots[i].x, shots[i].y)){
-                    cLoc = exports.checkCollision(shots[i], ufos);
-                    if (cLoc !== -1){
-                     	exports.destroy(ufos, cLoc);
-                      	exports.destroy(shots, i);
-                      	PS.audioPlay("fx_coin7");
-                    }
-                }else exports.destroy(shots, i);
-			}
-			exports.drawMap();
-        },
-
-        inSpawn:function(){
-			var i;
-			for(i = 0; i < ufos.length; i++){
-				if(ufos[i].x === Math.floor(w / 2) && ufos[i].y === 2)
-					return true;
-			}
-			return false;
-		},
-		inBounds : function(x, y){
-			if(x < 0 || y < 0) return false;
-			if(x > w - 1 || y > h - 1) return false;
-
-			return true;
-		},
-		checkCollision : function(obj, iList){
-				var i;
-			for(i = 0; i < iList.length; i++)
-				if(iList[i].x === obj.x && iList[i].y === obj.y) return i;
-			return -1;
-		},
-
-		ufoCollision : function(x, y){
-			var i;
-			for(i = 0; i < ufos.length; i++)
-				if(ufos[i].x === x && ufos[i].y === y)
-					return true;	
-		},
-
-		destroy : function(iList, i){
-			if(i !== iList.length - 1){
-				var tmp = iList[i];
-				iList[i] = iList[iList.length-1];
-				iList[iList.length-1] = tmp;
-			}
-			iList.pop();
-			if(ufos.length === 0) winState = true;
-		},
-        uAbility:function(){ ufoReady = true; },
-		dAbility:function(){ shotReady = true; },
-
-		gameState : function(){
-			if(winState === true){
-                PS.timerStop(uTimer);
-                PS.timerStop(sTimer);
-                PS.timerStop(dTimer);
-                PS.timerStop(gTimer);
-
-				if(ufos.length < 1) PS.statusText("Defenders Win!");
-				else PS.statusText("Invaders Win!");
-			}
-		},
-		clearList : function(iList){
-            var i, length;
-			length = iList.length;
-			if(length > 0)
-				for (i = 0; length > i;){
-                    iList[i] = null;
-                    iList.shift();
-                    length = iList.length;
-                }
+			InBounds:function(cx, cy){
+				if(cx-2<0 || cx+2>WIDTH)return false;
+				if(cy-1<0 || cy+1>HEIGHT)return false;
+				return true;
 			},
-			close : function(){
-                PS.timerStop(uTimer);
-                PS.timerStop(sTimer);
-                PS.timerStop(dTimer);
-                PS.timerStop(gTimer);
+			Move:function(x, y){
+				if(this.InBounds(this.x+x, this.y+y)){this.x+=x; this.y+=y;}
 			},
-			restart : function(){
-				exports.clearList(shots);
-				exports.clearList(ufos);
-				exports.init();
+			CheckCollisionPoint(cx, cy){
+				if(cy<this.y-1 || cy>this.y+1)return false;
+				if(cx<this.x-2 || cx>this.x+2)return false;
+				for(let y = -1; y < 2; y++)
+					for(let x = y - 1; x <= (-y + 1); x++){
+						if(cx == this.x + x && cy == this.y + y) return true;
+					}
+
+				//for(let y=-1;y<2;y++)for(let x=y*2+2;x>-3;x--)if(cx==this.x+x && cy==this.y+y)return true;
+				return false;
 			}
 		};
+		ufo.SetSpawn();
+		ufos.unshift(ufo);
+		ufoReady = false;
+		PS.audioPlay("fx_powerup4");
+	};
+	//#endregion
 
+	//#region Timers
+	function Update(){
+		for(let i=0; i<ufos.length; i++){
+			for(let j=0; j<shots.length; j++)
+				if(ufos[i].CheckCollisionPoint(shots[j].x, shots[j].y))
+					{Destroy(shots,j);Destroy(ufos,i); PS.audioPlay("fx_coin7"); i--; break;}
+		}
+
+		if(ufos.length == 0)winState = true;
+		else{
+			for(let i = 0; i < ufos.length; i++) if(ufos[i].y > HEIGHT - 5) winState = true;
+		}
+	}
+	function UFOTimer(){ufoReady=true;};
+	function DefenderTimer(){defender.ability=true;};
+	function ShotTimer(){
+		for(let i=0;i<shots.length;i++){
+			shots[i].Move();
+			if(shots[i].InBounds())Destroy(shots, i);
+		}
+		DrawMap();
+	};
+	//#endregion
+	
+	function Restart(){exports.Close(); exports.Init();};
+
+	var exports={
+		Init:function(){
+			PS.gridSize(WIDTH,HEIGHT);
+			PS.border(PS.ALL,PS.ALL,0);
+			PS.statusText("UFO: Arrows + /, DEFCOM: WASD spacebar.");
+			defender.ability=true; ufoReady=true; winState=false;
+			defender.SetSpawn(); MakeUFO();
+			gameT=PS.timerStart(1,Update);
+			shotT=PS.timerStart(2,ShotTimer);
+			defenderT=PS.timerStart(4,DefenderTimer);
+			ufoT=PS.timerStart(160,UFOTimer);
+			DrawMap();
+		},
+		Close:function(){
+			ClearList(shots);ClearList(ufos);
+			PS.timerStop(gameT); PS.timerStop(shotT); PS.timerStop(defenderT); PS.timerStop(ufoT);
+		},
+		Input:function(key){
+			if(winState===false){
+                switch(key){
+                    case 100:defender.Move(1);break;
+                    case 97:defender.Move(-1);break;
+                    case 32:if(defender.ability)MakeShot();break;
+                    case PS.KEY_ARROW_UP:ufos.forEach(ufo=>{ufo.Move(0,-1)}); break;
+                    case PS.KEY_ARROW_DOWN:ufos.forEach(ufo=>{ufo.Move(0,1)});break;
+                    case PS.KEY_ARROW_RIGHT:ufos.forEach(ufo=>{ufo.Move(1,0)});break;
+                    case PS.KEY_ARROW_LEFT:ufos.forEach(ufo=>{ufo.Move(-1,0)});break;
+                    case 47:if(ufoReady && UFOSpawnIsClear()){MakeUFO(); PS.audioPlay("fx_powerup6")}break;
+                    default:break;
+				}DrawMap();
+			}else
+				switch(key){case 114:Restart();break; default:break;}
+		}
+	};
 	return exports;
 }();
-
-PS.init = G.init;
-PS.keyDown = G.pInput(key);
-PS.shutdown = G.close;
+PS.init=G.Init; PS.keyDown=function(key){G.Input(key);}; PS.shutdown=G.Close;
