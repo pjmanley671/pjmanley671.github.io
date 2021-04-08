@@ -21,47 +21,6 @@ You may have received a copy of the GNU Lesser General Public License
 along with the Perlenspiel devkit. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-This JavaScript file is a template for creating new Perlenspiel 3.3.x games.
-By default, all event-handling function templates are COMMENTED OUT (using block-comment syntax), and are therefore INACTIVE.
-Uncomment and add code to the event handlers required by your project.
-Any unused event-handling function templates can be safely deleted.
-Refer to the tutorials and documentation at <https://ps3.perlenspiel.net> for details.
-*/
-
-/*
-The following comment lines are for JSHint <https://jshint.com>, a tool for monitoring code quality.
-You may find them useful if your development environment is configured to support JSHint.
-If you don't use JSHint (or are using it with a configuration file), you can safely delete these lines.
-*/
-
-/* jshint browser : true, devel : true, esversion : 5, freeze : true */
-/* globals PS : true */
-
-/*
-PS.init( system, options )
-Called once after engine is initialized but before event-polling begins.
-This function doesn't have to do anything, although initializing the grid dimensions with PS.gridSize() is recommended.
-If PS.grid() is not called, the default grid dimensions (8 x 8 beads) are applied.
-Any value returned is ignored.
-[system : Object] = A JavaScript object containing engine and host platform information properties; see API documentation for details.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
-
-// UNCOMMENT the following code BLOCK to expose the PS.init() event handler:
-
-/* Original Author: Paul Manley
- * Objective: Make a puzzle using perlenspiel.
- * Notes: 
- *		Project was originally a school project.
- *
- * Going forward: 
- *		Add in cover image for detailing puzzle layout and interactions.
- *		
- * Version: 2.1
- * Perlenspiel Package: 3.3
-*/
-
 var G=function(){
 	var mapData=[];
 	var colorOptions=[PS.COLOR_ORANGE,PS.COLOR_GREEN,PS.COLOR_INDIGO];
