@@ -7,30 +7,32 @@ async function GetAndHandleRepos(url=''){
 	const TIMEZONE = 'America/Chicago';
 
 	user = await (await fetch(url)).json();
-	thisDate = new Date(); recentRepos = [];
+	thisDate = (new Date()).getFullYear(); recentRepos = [];
 
 	user.forEach(repo => {
-		let repoCentralTime = Utils.convertTZ(repo.pushed_at, TIMEZONE);
-		if(repoCentralTime.getFullYear() === thisDate.getFullYear()) recentRepos.push(repo);
+		let repoCentralTime;
+		repoCentralTime = (Utils.convertTZ(repo.pushed_at, TIMEZONE)).getFullYear();
+		if(repoCentralTime === thisDate) recentRepos.push(repo);
 	})
 
 	commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
 	recentRepos.forEach(async function(repo){
-		let cTZ, commits, recentCommits;
-		recentCommits = [];
+		let cTZ, commits, repoCommits;
+		repoCommits = 0;
 		cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
 		commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
 
 		commits.forEach(cmt => {
-			let commitCentralTime = Utils.convertTZ(cmt.commit.author.date, TIMEZONE);
-			if(commitCentralTime.getFullYear() == thisDate.getFullYear()) {
-				recentCommits.push(cmt);
+			let commitCentralTime;
+			commitCentralTime = Utils.convertTZ(cmt.commit.author.date, TIMEZONE);
+			if(commitCentralTime.getFullYear() == thisDate) {
+				repoCommits++;
 				commitCount[commitCentralTime.getMonth()] += 1;
 			}
 		})
 		btn = Utils.GenerateLinkButton(repo.name, repo.html_url);
-		UpdateTable(btn, cTZ.toDateString(), recentCommits.length);
-    DrawChart();
+		UpdateTable(btn, cTZ.toDateString(), repoCommits);
+		DrawChart();
 	})
 	UpdateCommitCount(commitCount);
 }

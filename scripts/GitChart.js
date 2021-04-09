@@ -13,8 +13,10 @@ function ResetMonths(){
 }
 
 function ResetPoints(pSVG){
-	var points = document.getElementById("CircleGroup").children,
-		xOffset= pSVG.clientWidth / 30;
+	var points, xOffset;
+
+	points = document.getElementById("CircleGroup").children;
+	xOffset= pSVG.clientWidth / 30
 	
 	for(let p = 0; p < points.length; p++){
 		points[p].setAttribute("cx", String(p * pSVG.clientWidth / points.length + xOffset));
@@ -23,12 +25,16 @@ function ResetPoints(pSVG){
 }
 
 function SetPointPositions(pSVG, pGoal){
-	var points = document.getElementById("CircleGroup").children;
-	var yDist = pSVG.clientHeight / pGoal;
+	var points, yDist
+
+	points = document.getElementById("CircleGroup").children;
+	yDist = pSVG.clientHeight / pGoal
 
 	for(let i = 0; i < points.length; i++){
-		let height = pSVG.clientHeight - g_Commits[i] * yDist;
-		if(height < 0) height += Math.floor(g_Commits[i] / pGoal) * pGoal * yDist;
+		let height;
+		height = (g_Commits[i] >= pGoal) ? 0 : 
+			pSVG.clientHeight - g_Commits[i] * yDist;
+
 		points[i].setAttribute("cy", String(height));
 	}
 }
@@ -74,9 +80,28 @@ export function DrawChart(){
 	SetPointPositions(svg, goal);
 
 	githubmark = svg.children[0];
-	l_GithubMark.setAttribute( "x",
+	githubmark.setAttribute( "x",
 		String(0.5 * svg.clientWidth - 0.75 
 			* parseInt(githubmark.getAttribute("width"))));
+}
+
+function ReformatStringDate(pDate){
+	let lDate;
+	switch(pDate.substring(0, 3)){
+		case "Jan": lDate = "1"; break;
+		case "Feb": lDate = "2"; break;
+		case "Mar": lDate = "3"; break;
+		case "Apr": lDate = "4"; break;
+		case "May": lDate = "5"; break;
+		case "Jun": lDate = "6"; break;
+		case "Jul": lDate = "7"; break;
+		case "Aug": lDate = "8"; break;
+		case "Sep": lDate = "9"; break;
+		case "Oct": lDate = "10"; break;
+		case "Nov": lDate = "11"; break;
+		case "Dec": lDate = "12"; break;
+	}
+	return lDate.concat(pDate.substring(3, pDate.length));
 }
 
 export function UpdateTable(pBtn = {}, pPushedDate, pCmtTtl){
@@ -85,21 +110,31 @@ export function UpdateTable(pBtn = {}, pPushedDate, pCmtTtl){
 	if(pPushedDate	== null || undefined || '') return;
 
 	const COLUMNS = 3;
-	var table, tableRow;
+	var table, tableRow, pushedDate;
 	
+	table = document.getElementById("table-details");
 	tableRow = document.createElement("tr");
+	pushedDate = ReformatStringDate(pPushedDate.substring(4, pPushedDate.length));
+
 	for(let i = 0; i < COLUMNS; i++){
 		let column = document.createElement("td");
 		switch(i){
 			case 0: column.appendChild(pBtn); break;
-			case 1: column.innerHTML = pPushedDate; break;
+			case 1: column.innerHTML = pushedDate; break;
 			case 2: column.innerHTML = pCmtTtl.toString(); break;
 			default: break;
 		}
 		tableRow.appendChild(column);
 	}
-	table = document.getElementById("table-details");
 	table.appendChild(tableRow);
+
+	if(table.length > 2){
+		let aboveRow = table.children[table.children.length - 2];
+		if(aboveRow.children[1].innerHTML.toString() < table.lastChild.children[1].toString()){
+			table.children[table.children.length - 2] = table.lastChild;
+			table.lastChild = aboveRow;
+		}
+	}
 }
 
 export function UpdateCommitCount(pNums){ g_Commits = pNums; }
