@@ -137,4 +137,4 @@ export function UpdateTable(pBtn = {}, pPushedDate, pCmtTtl){
 	}
 }
 
-export function UpdateCommitCount(pNums){ g_Commits = pNums; }
+export function UpdateCommitCount(pNums){ g_Commits = pNums;}

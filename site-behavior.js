@@ -8,6 +8,8 @@ async function GetAndHandleRepos(url=''){
 
 	user = await (await fetch(url)).json();
 	thisDate = (new Date()).getFullYear(); recentRepos = [];
+	// let img = await(await fetch("https://api.twitter.com/1.1/users/profile_banner.json?screen_name=pjmanley671")).json();
+	// console.log(img);
 
 	user.forEach(repo => {
 		let repoCentralTime;
@@ -21,10 +23,11 @@ async function GetAndHandleRepos(url=''){
 		repoCommits = 0;
 		cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
 		commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
+		console.log(repo.commits_url);
 
 		commits.forEach(cmt => {
 			let commitCentralTime;
-			commitCentralTime = Utils.convertTZ(cmt.commit.author.date, TIMEZONE);
+			commitCentralTime = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE);
 			if(commitCentralTime.getFullYear() == thisDate) {
 				repoCommits++;
 				commitCount[commitCentralTime.getMonth()] += 1;
