@@ -8,8 +8,6 @@ async function GetAndHandleRepos(url=''){
 
 	user = await (await fetch(url)).json();
 	thisDate = (new Date()).getFullYear(); recentRepos = [];
-	// let img = await(await fetch("https://api.twitter.com/1.1/users/profile_banner.json?screen_name=pjmanley671")).json();
-	// console.log(img);
 
 	user.forEach(repo => {
 		let repoCentralTime;
@@ -19,20 +17,24 @@ async function GetAndHandleRepos(url=''){
 
 	commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
 	recentRepos.forEach(async function(repo){
-		let cTZ, commits, repoCommits;
+		let cTZ, commits, repoCommits, commitPageNum, commitPageLink;
+		commitPageNum = 0;
 		repoCommits = 0;
-		cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
-		commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
-		console.log(repo.commits_url);
 
-		commits.forEach(cmt => {
-			let commitCentralTime;
-			commitCentralTime = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE);
-			if(commitCentralTime.getFullYear() == thisDate) {
+		cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
+		commitPageLink = repo.commits_url.slice(0, repo.commits_url.length - 6);
+		
+		do{
+			commitPageLink = commitPageLink.concat("?page=", commitPageNum.toString(), "&since=2020-12-31T23-59-59Z");
+			commits = await (await fetch(commitPageLink)).json();
+			repoCommits += commits.length;
+			commits.forEach(cmt => {
+				let commitCentralTime;
+				commitCentralTime = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE);
 				repoCommits++;
 				commitCount[commitCentralTime.getMonth()] += 1;
-			}
-		})
+			})
+		}while(commits.length > 0);
 		btn = Utils.GenerateLinkButton(repo.name, repo.html_url);
 		UpdateTable(btn, cTZ.toDateString(), repoCommits);
 		DrawChart();
