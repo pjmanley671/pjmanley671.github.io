@@ -2,6 +2,8 @@ import {UpdateTable, DrawChart, UpdateCommitCount} from './scripts/GitChart.js'
 import * as Utils from './scripts/Utils.js'
 import Config from './Data/General.js'
 
+var activePage;
+
 async function GetAndHandleRepos(url=''){
 	var user, commitCount, recentRepos, thisDate, btn;
 	recentRepos = [];
@@ -40,28 +42,49 @@ async function GetAndHandleRepos(url=''){
 }
 
 function GenerateHeaderButtons(){
-	var navbar, pages, drpdwn;
+	var navbar, drpdwn;
 	navbar = document.getElementById("navbar");
-	pages = document.getElementsByClassName("flexbox-container");
-
-	for(let i = 0; i < pages.length; i++){
-		let btn = document.createElement("button");
-		btn.innerHTML = pages[i].id;
-		btn.className = "navbar-link";
-		if(btn.innerHTML == "Home") btn.style.backgroundColor = "black";
-		btn.addEventListener("click", event => {Utils.OpenPage(event.target, "black")})
-		navbar.appendChild(btn);
-	}
-
 	drpdwn = document.getElementById("dropdown-content");
-	Config.Links.forEach(navLink => {
-		if(navLink.Confirmation.message_format == "Perlenspiel")
-			drpdwn.appendChild(Utils.GenerateLinkButton(navLink.name, navLink.link, navLink.Confirmation.confirm));
+
+	Config.Links.forEach(navLink =>{
+		let btn;
+		btn = Utils.GenerateLinkButton(navLink.Name, navLink.Link);
+		btn.className = navLink.Confirmation.message_format;
+
+		switch(navLink.Confirmation.message_format){
+			case "Navbar-link":
+				btn.addEventListener("click", event =>{
+					Utils.OpenPage(event.target, "black");
+					activePage = event.target.innerHTML;
+					Resize();
+				});
+				navbar.appendChild(btn);
+				break;
+			case "Perlenspiel":
+				btn.addEventListener("click", event =>{
+					let confirmExit = false;
+					confirmExit = confirm("Page will leave default site or to an external site. Continue?");
+					if(confirmExit) window.open(event.target.value, "_self");
+				});
+				drpdwn.appendChild(btn);
+				break;
+			default:
+				break;
+		}
+		if(btn.innerHTML == "Home") btn.style.backgroundColor = "black";
 	})
 }
 
 const Resize = () =>{
-	DrawChart();
+	switch(activePage){
+		case "Home":
+			DrawChart();
+			break;
+		case "Contact":
+			break;
+		default:
+			break;
+	}
 }
 
 const PageLoad = () => {
