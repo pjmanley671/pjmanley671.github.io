@@ -5,9 +5,9 @@ export function convertTZ(date, tzString){
 }
 
 export function GenerateLinkButton(p_Text, p_Url, p_confirm = false){
-    var l_btn = document.createElement("button");
+  var l_btn = document.createElement("button");
 	l_btn.innerHTML = p_Text;
-    l_btn.value = p_Url;
+  l_btn.value = p_Url;
 	l_btn.id = l_btn.innerHTML;
 
 	l_btn.addEventListener("click", event => {
