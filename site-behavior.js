@@ -4,12 +4,11 @@ import Config from './Data/General.js'
 
 async function GetAndHandleRepos(url=''){
 	var user, commitCount, recentRepos, thisDate, btn;
-	const TIMEZONE = 'America/Chicago';
+	recentRepos = [];
 
+	const TIMEZONE = 'America/Chicago';
 	user = await (await fetch(url)).json();
-	thisDate = (new Date()).getFullYear(); recentRepos = [];
-	// let img = await(await fetch("https://api.twitter.com/1.1/users/profile_banner.json?screen_name=pjmanley671")).json();
-	// console.log(img);
+	thisDate = (new Date()).getFullYear();
 
 	user.forEach(repo => {
 		let repoCentralTime;
