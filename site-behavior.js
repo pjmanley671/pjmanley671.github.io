@@ -71,7 +71,11 @@ function GenerateHeaderButtons(){
 			default:
 				break;
 		}
-		if(btn.innerHTML == "Home") btn.style.backgroundColor = "black";
+		if(btn.innerHTML == "Home"){
+			btn.style.backgroundColor = "black";
+			activePage = btn.innerHTML;
+			btn.click();
+		}
 	})
 }
 

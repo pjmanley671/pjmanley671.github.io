@@ -13,14 +13,18 @@ export function GenerateLinkButton(p_Text, p_Url){
 
 export function OpenPage(elmnt, color) {
 	var i, tabcontent, tablinks;
+
 	tabcontent = document.getElementsByClassName("flexbox-container");
-	for (i = 0; i < tabcontent.length; i++)
-		tabcontent[i].style.visibility = "hidden";
-
 	tablinks = document.getElementsByClassName("Navbar-link");
-	for (i = 0; i < tablinks.length; i++)
-		tablinks[i].style.backgroundColor = "#555";
 
-	document.getElementById(elmnt.innerHTML).style.visibility = "visible";
+	for (i = 0; i < tabcontent.length; i++)
+		tabcontent[i].style.display = "none"; // collapse all the pages content.
+
+	for (i = 0; i < tablinks.length; i++)
+		tablinks[i].style.backgroundColor = "#555"; // reset all the navbar buttons colors.
+
+	// Set the display information for the active page.
+	let activePage = document.getElementById(elmnt.innerHTML);
+	activePage.style.display = "flex";
 	elmnt.style.backgroundColor = color;
 }
