@@ -25,6 +25,7 @@ export function OpenPage(elmnt, color) {
 
 	// Set the display information for the active page.
 	let activePage = document.getElementById(elmnt.innerHTML);
-	activePage.style.display = "flex";
+	let width = (window.innerWidth > 0)? window.innerWidth: screen.width;
+	activePage.style.display = (width > 800)? "flex" : "inline-block";
 	elmnt.style.backgroundColor = color;
 }
