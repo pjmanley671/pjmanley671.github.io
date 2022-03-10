@@ -29,7 +29,8 @@ async function GetAndHandleRepos(url=''){
 		repoCommits = 0;
 		cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
 		commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
-		if(repo.commits_url.slice(0, repo.commits_url.length - 6) == document.URL)
+		console.log(document.URL);
+		if(repo.commits_url.slice(0, repo.commits_url.length - 6) == document.URL.slice(0, document.URL.length - 1))
 			document.getElementById("LastSiteUpdate").innerHTML += commits[0].commit.message;
 
 		commits.forEach(cmt => {
