@@ -11,12 +11,7 @@ async function GetAndHandleRepos(url=''){
 	const TIMEZONE = 'America/Chicago';
 	user = await (await fetch(url)).json();
 	thisDate = (new Date()).getFullYear();
-	//console.log(user);
-	if(user == null){
-		DrawChart();
-		document.getElementById("LastSiteUpdate").innerHTML += "GitHub has reached max requests for the Month. Conversion to RestAPI still needs to be done.";
-		return;
-	}
+
 	user.forEach(repo => {
 		let repoCentralTime;
 		repoCentralTime = (Utils.convertTZ(repo.pushed_at, TIMEZONE)).getFullYear();
@@ -29,9 +24,15 @@ async function GetAndHandleRepos(url=''){
 		repoCommits = 0;
 		cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
 		commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
-		console.log(document.URL);
-		console.log(repo.commits_url.slice(0, repo.commits_url.length - 6));
-		if(repo.commits_url.slice(0, repo.commits_url.length - 6) == document.URL.slice(0, document.URL.length - 1))
+		let docURL = "";
+		docURL =
+			(document.URL.slice(0, 5) == "https")? document.URL.slice(8, document.URL.length - 1) : 
+			(document.URL.slice(0, 4) == "http")? document.URL.slice(7, document.URL.length - 1) : 
+			document.URL;
+
+		//console.log(repo.commits_url.slice(41, repo.commits_url.length - 14));
+
+		if(repo.commits_url.slice(41, repo.commits_url.length - 14) == docURL)
 			document.getElementById("LastSiteUpdate").innerHTML += commits[0].commit.message;
 
 		commits.forEach(cmt => {
