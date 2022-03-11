@@ -34,10 +34,16 @@ footer p{
 	margin-bottom: 0px;
 }
 
+.Reverse{
+  unicode-bidi:bidi-override; /* override the bidi algorithm for inline block elements. 
+	Warning: This property is intended for Document Type Definition (DTD) designers. Web designers and similar authors should not override it.*/
+  direction:rtl; /* Paired with bidi-override to reverse each character and the entire string. */
+}
+
+marquee{ filter: invert(100%); }
+
 @media screen and (max-width: 800px){
 	.flexbox-container{ display:inline-block; }
 
 	.aside{ width: 100%; display: inline; }
-
-
 }
