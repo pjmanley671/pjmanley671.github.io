@@ -11,7 +11,7 @@ export function GenerateLinkButton(p_Text, p_Url){
   return l_btn;
 }
 
-export function OpenPage(elmnt, color) {
+export function OpenPage(elmnt, color){
 	var i, tabcontent, tablinks;
 
 	tabcontent = document.getElementsByClassName("flexbox-container");
