@@ -4,10 +4,10 @@ import Config from './Data/General.js'
 
 var activePage;
 
-function AdjustAnimationSpeed(object, textLength){
-	/* https://stackoverflow.com/questions/28242013/updating-animation-duration-in-javascript
-		 https://stackoverflow.com/questions/32638465/how-to-scroll-text-smoothly-using-html5
-		 */
+/* function AdjustAnimationSpeed(object, textLength){
+	// https://stackoverflow.com/questions/28242013/updating-animation-duration-in-javascript
+	// https://stackoverflow.com/questions/32638465/how-to-scroll-text-smoothly-using-html5
+		 
 	if(textLength <= 0) return;
 	let width = (window.innerWidth > 0)? window.innerWidth: screen.width;
 
@@ -15,7 +15,7 @@ function AdjustAnimationSpeed(object, textLength){
 	object.style["animeation-duration"] = ms_Scale + "ms";
 	object.style["-webkit-animation-duration"] = (ms_Scale * textLength) + "ms";
 }
-
+ */
 async function GetAndHandleRepos(url=''){
 	var user, commitCount, recentRepos, thisDate, btn;
 	recentRepos = [];
@@ -47,13 +47,13 @@ async function GetAndHandleRepos(url=''){
 		if(repo.commits_url.slice(41, repo.commits_url.length - 14) == docURL){
 			let marqueeText = document.getElementById("LastSiteUpdate");
 			marqueeText.innerHTML += commits[0].commit.message;
-			AdjustAnimationSpeed(marqueeText, commits[0].commit.message.length);
-		}/* else if(repo.commits_url.slice(41, repo.commits_url.length - 14) == "pjmanley671.github.io"){
+			Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
+		}else if(repo.commits_url.slice(41, repo.commits_url.length - 14) == "pjmanley671.github.io"){
 			let marqueeText = document.getElementById("LastSiteUpdate");
 			let text = "Testing String Marquee Behavior Adding Extra word for testing String Length rate. Adding even more words to verify rate speed.";
 			marqueeText.innerHTML += text;
-			AdjustAnimationSpeed(marqueeText, text.length);
-		}else{} */
+			Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
+		}else{}
 
 		commits.forEach(cmt => {
 			let commitCentralTime;
