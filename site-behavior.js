@@ -4,18 +4,6 @@ import Config from './Data/General.js'
 
 var activePage;
 
-/* function AdjustAnimationSpeed(object, textLength){
-	// https://stackoverflow.com/questions/28242013/updating-animation-duration-in-javascript
-	// https://stackoverflow.com/questions/32638465/how-to-scroll-text-smoothly-using-html5
-		 
-	if(textLength <= 0) return;
-	let width = (window.innerWidth > 0)? window.innerWidth: screen.width;
-
-	let ms_Scale = (width * 0.5) + (textLength * 0.5);
-	object.style["animeation-duration"] = ms_Scale + "ms";
-	object.style["-webkit-animation-duration"] = (ms_Scale * textLength) + "ms";
-}
- */
 async function GetAndHandleRepos(url=''){
 	var user, commitCount, recentRepos, thisDate, btn;
 	recentRepos = [];

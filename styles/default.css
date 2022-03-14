@@ -41,11 +41,11 @@ footer p{
 
 @keyframes slide {
   from{ left: 100%; }
-  to{ left: -100%; }
+  to{ left: -120%; }
 }
 @-webkit-keyframes slide {
   from{ left: 100%; }
-  to{ left: -100%; }
+  to{ left: -120%; }
 }
 
 #marquee{
