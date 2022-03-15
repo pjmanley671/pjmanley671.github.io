@@ -78,4 +78,6 @@ footer p{
 	.flexbox-container{ display:inline-block; }
 
 	.aside{ width: 100%; display: inline; }
+
+	footer{ position: -webkit-sticky; position: sticky; bottom: 0; }
 }

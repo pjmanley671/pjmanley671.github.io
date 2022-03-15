@@ -12,7 +12,7 @@ async function GetAndHandleRepos(url=''){
 	user = await (await fetch(url)).json();
 	thisDate = (new Date()).getFullYear();
 
-	user.forEach(repo => {
+	user.forEach(repo =>{ // Loads the repos that have been updated this year.
 		let repoCentralTime;
 		repoCentralTime = (Utils.convertTZ(repo.pushed_at, TIMEZONE)).getFullYear();
 		if(repoCentralTime === thisDate) recentRepos.push(repo);
@@ -29,8 +29,6 @@ async function GetAndHandleRepos(url=''){
 			(document.URL.slice(0, 5) == "https")? document.URL.slice(8, document.URL.length - 1) : 
 			(document.URL.slice(0, 4) == "http")? document.URL.slice(7, document.URL.length - 1) : 
 			document.URL;
-
-		console.log(repo.commits_url.slice(41, repo.commits_url.length - 14));
 
 		if(repo.commits_url.slice(41, repo.commits_url.length - 14) == docURL){
 			let marqueeText = document.getElementById("LastSiteUpdate");
