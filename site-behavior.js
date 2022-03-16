@@ -5,58 +5,65 @@ import Config from './Data/General.js'
 var activePage;
 
 async function GetAndHandleRepos(url=''){
-	var user, commitCount, recentRepos, thisDate, btn;
+	var user, commitCount, recentRepos, thisYear, btn;
 	recentRepos = [];
+	commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
 
 	const TIMEZONE = 'America/Chicago';
 	user = await (await fetch(url)).json();
-	thisDate = (new Date()).getFullYear();
+	thisYear = (new Date()).getFullYear();
 
-	user.forEach(repo =>{ // Loads the repos that have been updated this year.
+	user.forEach(repo =>{
 		let repoCentralTime;
 		repoCentralTime = (Utils.convertTZ(repo.pushed_at, TIMEZONE)).getFullYear();
-		if(repoCentralTime === thisDate) recentRepos.push(repo);
+		if(repoCentralTime === thisYear) recentRepos.push(repo);
 	})
 
-	commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
 	recentRepos.forEach(async function(repo){
-		let cTZ, commits, repoCommits;
+		let cTZ, commits, repoCommits, commitUrl;
+		
 		repoCommits = 0;
 		cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
-		commits = await (await fetch(repo.commits_url.slice(0, repo.commits_url.length - 6))).json();
-		let docURL = "";
-		docURL =
-			(document.URL.slice(0, 5) == "https")? document.URL.slice(8, document.URL.length - 1) : 
-			(document.URL.slice(0, 4) == "http")? document.URL.slice(7, document.URL.length - 1) : 
-			document.URL;
+		commitUrl = repo.commits_url.slice(0, repo.commits_url.length - 6);
 
-		if(repo.commits_url.slice(41, repo.commits_url.length - 14) == docURL){
-			let marqueeText = document.getElementById("LastSiteUpdate");
-			marqueeText.innerHTML += commits[0].commit.message;
-			Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
-		}else if(repo.commits_url.slice(41, repo.commits_url.length - 14) == "pjmanley671.github.io"){
-			let marqueeText = document.getElementById("LastSiteUpdate");
-			let text = "Testing String Marquee Behavior Adding Extra word for testing String Length rate. Adding even more words to verify rate speed.";
-			marqueeText.innerHTML += text;
-			Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
-		}else{}
+		commitUrl += "?per_page=100&page=1";
+		let fetch_response = await(fetch(commitUrl));
+		if(fetch_response.ok){
+			commits = await(fetch_response).json();
+			let docURL = "";
+			docURL =
+				(document.URL.slice(0, 5) == "https")? document.URL.slice(8, document.URL.length - 1) : 
+				(document.URL.slice(0, 4) == "http")? document.URL.slice(7, document.URL.length - 1) : 
+				document.URL;
 
-		commits.forEach(cmt => {
-			let commitCentralTime;
-			commitCentralTime = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE);
-			if(commitCentralTime.getFullYear() == thisDate) {
-				repoCommits++;
-				commitCount[commitCentralTime.getMonth()] += 1;
-			}
-		})
-		btn = Utils.GenerateLinkButton(repo.name, repo.html_url);
-		btn.addEventListener("click", event =>{
-			let confirmExit = false;
-			confirmExit = confirm("Page will leave default site or to an external site. Continue?");
-			if(confirmExit) window.open(event.target.value, "_self");
-		});
-		UpdateTable(btn, cTZ.toDateString(), repoCommits);
-		DrawChart();
+			if(repo.commits_url.slice(41, repo.commits_url.length - 14) == docURL){
+				let marqueeText = document.getElementById("LastSiteUpdate");
+				marqueeText.innerHTML += commits[0].commit.message;
+				Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
+			}else if(repo.commits_url.slice(41, repo.commits_url.length - 14) == "pjmanley671.github.io"){
+				let marqueeText = document.getElementById("LastSiteUpdate");
+				let text = "Testing String Marquee Behavior Adding Extra word for testing String Length rate. Adding even more words to verify rate speed.";
+				marqueeText.innerHTML += text;
+				Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
+			}else{}
+
+			commits.forEach(cmt => {
+				let commitCentralTime;
+				commitCentralTime = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE);
+				if(commitCentralTime.getFullYear() == thisYear) {
+					repoCommits++;
+					commitCount[commitCentralTime.getMonth()] += 1;
+				}
+			})
+			btn = Utils.GenerateLinkButton(repo.name, repo.html_url);
+			btn.addEventListener("click", event =>{
+				let confirmExit = false;
+				confirmExit = confirm("Page will leave default site or to an external site. Continue?");
+				if(confirmExit) window.open(event.target.value, "_self");
+			});
+			UpdateTable(btn, cTZ.toDateString(), repoCommits);
+			DrawChart();
+		}
 	})
 	UpdateCommitCount(commitCount);
 }
