@@ -5,103 +5,96 @@ import Config from './Data/General.js'
 var activePage;
 
 async function GetAndHandleRepos(url=''){
-	var user, commitCount, recentRepos, thisYear, btn;
-	recentRepos = [];
-	commitCount = new Uint32Array(document.getElementById("CircleGroup").children.length);
+	var user_repos, commit_count, repos_recent, date_year_current;
+	repos_recent = [];
+	commit_count = new Uint32Array(document.getElementById("CircleGroup").children.length);
 
 	const TIMEZONE = 'America/Chicago';
-	user = await (await fetch(url)).json();
-	thisYear = (new Date()).getFullYear();
+	user_repos = await (await fetch(url)).json();
+	date_year_current = (new Date()).getFullYear();
 
-	user.forEach(repo =>{
-		let repoCentralTime;
-		repoCentralTime = (Utils.convertTZ(repo.pushed_at, TIMEZONE)).getFullYear();
-		if(repoCentralTime === thisYear) recentRepos.push(repo);
+	user_repos.forEach(repo =>{
+		let repo_pushed_year;
+		repo_pushed_year = (Utils.convertTZ(repo.pushed_at, TIMEZONE)).getFullYear();
+		if(repo_pushed_year === date_year_current) repos_recent.push(repo);
 	})
 
-	recentRepos.forEach(async function(repo){
-		let cTZ, commits, repoCommits, commitUrl;
+	repos_recent.forEach(async function(repo){
+		let repo_pushed_date, commits, commits_count, commit_url, repo_html_button;
 		
-		repoCommits = 0;
-		cTZ = Utils.convertTZ(repo.pushed_at, TIMEZONE);
-		commitUrl = repo.commits_url.slice(0, repo.commits_url.length - 6);
+		commits_count = 0;
+		repo_pushed_date = Utils.convertTZ(repo.pushed_at, TIMEZONE);
+		commit_url = repo.commits_url.slice(0, repo.commits_url.length - 6);
+		commit_url += "?per_page=100&page=1";
 
-		commitUrl += "?per_page=100&page=1";
-		let fetch_response = await(fetch(commitUrl));
+		let fetch_response = await(fetch(commit_url));
 		if(fetch_response.ok){
 			commits = await(fetch_response).json();
-			let docURL = "";
-			docURL =
-				(document.URL.slice(0, 5) == "https")? document.URL.slice(8, document.URL.length - 1) : 
-				(document.URL.slice(0, 4) == "http")? document.URL.slice(7, document.URL.length - 1) : 
-				document.URL;
+			let doc_url = "";
+			doc_url = document.URL;
 
-			if(repo.commits_url.slice(41, repo.commits_url.length - 14) == docURL){
-				let marqueeText = document.getElementById("LastSiteUpdate");
-				marqueeText.innerHTML += commits[0].commit.message;
+			// checks position to be 8 because the site name should be https:// and then the github repo name.
+			if(doc_url.search(repo.name) === 8 || repo.name == "pjmanley671.github.io"){ // Uses my specific site to check for live server testing.
+				let site_update_latest = document.getElementById("LastSiteUpdate");
+				site_update_latest.innerHTML += commits[0].commit.message;
 				Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
-			}else if(repo.commits_url.slice(41, repo.commits_url.length - 14) == "pjmanley671.github.io"){
-				let marqueeText = document.getElementById("LastSiteUpdate");
-				let text = "Testing String Marquee Behavior Adding Extra word for testing String Length rate. Adding even more words to verify rate speed.";
-				marqueeText.innerHTML += text;
-				Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
-			}else{}
+			}
 
-			commits.forEach(cmt => {
-				let commitCentralTime;
-				commitCentralTime = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE);
-				if(commitCentralTime.getFullYear() == thisYear) {
-					repoCommits++;
-					commitCount[commitCentralTime.getMonth()] += 1;
+			commits.forEach(cmt =>{
+				let commit_date;
+				commit_date = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE);
+				if(commit_date.getFullYear() == date_year_current){
+					commits_count++;
+					commit_count[commit_date.getMonth()] += 1;
 				}
 			})
-			btn = Utils.GenerateLinkButton(repo.name, repo.html_url);
-			btn.addEventListener("click", event =>{
-				let confirmExit = false;
-				confirmExit = confirm("Page will leave default site or to an external site. Continue?");
-				if(confirmExit) window.open(event.target.value, "_self");
+			repo_html_button = Utils.GenerateLinkButton(repo.name, repo.html_url);
+			repo_html_button.addEventListener("click", event=>{
+				let exit_confirm = false;
+				exit_confirm = confirm("Page will exit to Github repository: " + event.target.innerHTML + ". Continue?");
+				if(exit_confirm) window.open(event.target.value, "_self");
 			});
-			UpdateTable(btn, cTZ.toDateString(), repoCommits);
+			UpdateTable(repo_html_button, repo_pushed_date.toDateString(), commits_count);
 			DrawChart();
 		}
 	})
-	UpdateCommitCount(commitCount);
+	UpdateCommitCount(commit_count);
 }
 
 function GenerateHeaderButtons(){
-	var navbar, drpdwn;
+	var navbar, dropdown_content;
 	navbar = document.getElementById("navbar");
-	drpdwn = document.getElementById("dropdown-content");
+	dropdown_content = document.getElementById("dropdown-content");
 
 	Config.Links.forEach(navLink =>{
-		let btn;
-		btn = Utils.GenerateLinkButton(navLink.Name, navLink.Link);
-		btn.className = navLink.Confirmation.message_format;
+		let nav_button;
+		nav_button = Utils.GenerateLinkButton(navLink.Name, navLink.Link);
+		nav_button.className = navLink.Confirmation.message_format;
 
 		switch(navLink.Confirmation.message_format){
 			case "Navbar-link":
-				btn.addEventListener("click", event =>{
+				nav_button.addEventListener("click", event =>{
 					Utils.OpenPage(event.target, "black");
 					activePage = event.target.innerHTML;
 					Resize();
 				});
-				navbar.appendChild(btn);
+				navbar.appendChild(nav_button);
 				break;
 			case "Perlenspiel":
-				btn.addEventListener("click", event =>{
-					let confirmExit = false;
-					confirmExit = confirm("Page will leave default site or to an external site. Continue?");
-					if(confirmExit) window.open(event.target.value, "_self");
+				nav_button.addEventListener("click", event =>{
+					let exit_confirm = false;
+					exit_confirm = confirm("Page will transfer to perlesnpiel project: "+ event.target.innerHTML +". Continue?");
+					if(exit_confirm) window.open(event.target.value, "_self");
 				});
-				drpdwn.appendChild(btn);
+				dropdown_content.appendChild(nav_button);
 				break;
 			default:
 				break;
 		}
-		if(btn.innerHTML == "Home"){
-			btn.style.backgroundColor = "black";
-			activePage = btn.innerHTML;
-			btn.click();
+		if(nav_button.innerHTML == "Home"){
+			nav_button.style.backgroundColor = "black";
+			activePage = nav_button.innerHTML;
+			nav_button.click();
 		}
 	})
 }
