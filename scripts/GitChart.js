@@ -104,37 +104,45 @@ function ReformatStringDate(pDate){
 	return lDate.concat(pDate.substring(3, pDate.length));
 }
 
-export function UpdateTable(pBtn = {}, pPushedDate, pCmtTtl){
-	if(pBtn == null || undefined || '') return;
-	if(pCmtTtl == null || undefined || '') return;
-	if(pPushedDate	== null || undefined || '') return;
+function SortRepoTable(){
+	let i, j, table, row_swap;
+	table = document.getElementById("table-details");
 
-	const COLUMNS = 3;
-	var table, tableRow, pushedDate;
+	for(i = 1; i < table.children.length; i++){
+		for(j = i+1; j < table.children.length; j++){
+			console.log(`Comparing: ${table.children[i].children[1].innerHTML} to ${table.children[j].children[1].innerHTML}`);
+			if(table.children[i].children[1].innerHTML > table.children[j].children[1].innerHTML){
+				row_swap = table.children[i];
+				table.children[i] = table.children[j];
+				table.children[j] = row_swap;
+			}
+		}
+	}
+}
+
+export function UpdateTable(pButton = {}, pDate_pushed, pCommit_total){
+	if(pButton == null || undefined || '') return;
+	if(pCommit_total == null || undefined || '') return;
+	if(pDate_pushed	== null || undefined || '') return;
+
+	let table, tableRow, pushedDate;
 	
 	table = document.getElementById("table-details");
 	tableRow = document.createElement("tr");
-	pushedDate = ReformatStringDate(pPushedDate.substring(4, pPushedDate.length));
+	pushedDate = ReformatStringDate(pDate_pushed.substring(4, pDate_pushed.length));
 
-	for(let i = 0; i < COLUMNS; i++){
-		let column = document.createElement("td");
-		switch(i){
-			case 0: column.appendChild(pBtn); break;
-			case 1: column.innerHTML = pushedDate; break;
-			case 2: column.innerHTML = pCmtTtl.toString(); break;
-			default: break;
-		}
-		tableRow.appendChild(column);
-	}
+	
+	let column = document.createElement("td");
+	column.appendChild(pButton);
+	tableRow.appendChild(column);
+	column = document.createElement("td");
+	column.innerHTML = pushedDate;
+	tableRow.appendChild(column);
+	column = document.createElement("td");
+	column.innerHTML = pCommit_total.toString();
+	tableRow.appendChild(column);
 	table.appendChild(tableRow);
-
-	if(table.length > 2){
-		let aboveRow = table.children[table.children.length - 2];
-		if(aboveRow.children[1].innerHTML.toString() < table.lastChild.children[1].toString()){
-			table.children[table.children.length - 2] = table.lastChild;
-			table.lastChild = aboveRow;
-		}
-	}
+	//SortRepoTable();
 }
 
 export function UpdateCommitCount(pNums){ g_Commits = pNums;}
