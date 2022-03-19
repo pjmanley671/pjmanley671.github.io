@@ -17,6 +17,10 @@ header{ display: block; }
 
 .aside{ width: 45%; display: block; }
 
+.flexbox-container{
+	margin-left: 0.5em;
+}
+
 footer{
 	float:none;
 	position:fixed;
@@ -80,4 +84,6 @@ footer p{
 	.aside{ width: 100%; display: inline; }
 
 	footer{ position: -webkit-sticky; position: sticky; bottom: 0; }
+	
+	#LastSiteUpdate{ position: -webki-sticky; position: relative; bottom: 0; }
 }

@@ -117,13 +117,19 @@ const Resize = () =>{
 	}
 }
 
-const PageLoad = () => {
+const PageLoad=()=>{
 	GenerateHeaderButtons();
-	GetAndHandleRepos('https://api.github.com/users/pjmanley671/repos');
+	let user_name = document.URL;
+	let host = window.location.protocol + "//" + window.location.host + "/";
+
+	if(user_name == host) user_name = 'pjmanley671';
+	else user_name = user_name.slice(8, user_name.length - 10);
+
+	GetAndHandleRepos(`https://api.github.com/users/${user_name}/repos`);
 }
 
 window.onload = PageLoad;
 window.onresize = Resize;
 
-//http://davidbau.com/encode/seedrandom.js
 //https://stackoverflow.com/questions/2117046/how-to-show-live-preview-in-a-small-popup-of-linked-page-on-mouse-over-on-link
+//https://stackoverflow.com/questions/6042007/how-to-get-the-host-url-using-javascript-from-the-current-page

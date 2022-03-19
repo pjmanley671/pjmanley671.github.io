@@ -1,0 +1,54 @@
+{
+  
+  "Experience": [{
+    "Type": "Work/Student/Personal/Community",
+    "Position": "Job Position / Title",
+    "Employer": "Employer Name",
+    "Address": [
+      "street", "city", "State", "Zip", "Country"
+    ],
+    "Date_Start" : "YYYY MM DD",
+    "Date_End" : "YYYY MM DD",
+    "Description" : "General Job description",
+    "Details":[]
+  },{
+    "Type": "Student",
+    "Position": "Programmer",
+    "Employer": "Dakota State University",
+    "Address": [
+      "", "Madison", "South Dakota", "57042", "U.S.A"
+    ],
+    "Date_Start": "2018 08 24",
+    "Date_End" : "2019 05 07",
+    "Description" : "Brains: Graveyard Bound",
+    "Details":[
+      "Student group project, size: 8",
+      "Tech: Unity, GitHub, Trello, Slack",
+      "Languages: C#",
+      "Iterated player and bot mechanics",
+      "Developed pathing tool for in-editor development",
+      "Peer reviewed code",
+      "Learned about the navmesh system and editor customization",
+      "Discovered design choice for using character controller over rigidbody"
+    ]
+  },{
+    "Type": "Student",
+    "Position": "Programmer",
+    "Employer": "Dakota State University",
+    "Address": [
+      "", "Madison", "South Dakota", "57042", "U.S.A"
+    ],
+    "Date_Start" : "2017 08 24",
+    "Date_End" : "2018 05 07",
+    "Description" : "A Murder Mystery in Minnesota",
+    "Details":[
+      "Student group project, size: 8",
+      "Tech: Adventure Game Studio, TortoiseSVN, Trello",
+      "Language: C++ (modified)",
+      "Developed time-system for character locations, dialogue options, object locations",
+      "Designed user-interface for blackberry menus layout and behaviors",
+      "Learned basics of version control with TortoiseSVN",
+      "First time experience working with Adventure Game Studio"
+    ]
+  }]
+}

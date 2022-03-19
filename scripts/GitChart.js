@@ -125,23 +125,24 @@ export function UpdateTable(pButton = {}, pDate_pushed, pCommit_total){
 	if(pCommit_total == null || undefined || '') return;
 	if(pDate_pushed	== null || undefined || '') return;
 
-	let table, tableRow, pushedDate;
+	let table, table_row, date_pushed, columns, row_column;
 	
 	table = document.getElementById("table-details");
-	tableRow = document.createElement("tr");
-	pushedDate = ReformatStringDate(pDate_pushed.substring(4, pDate_pushed.length));
+	columns = table.children[0].children.length;
+	table_row = document.createElement("tr");
+	date_pushed = ReformatStringDate(pDate_pushed.substring(4, pDate_pushed.length));
 
-	
-	let column = document.createElement("td");
-	column.appendChild(pButton);
-	tableRow.appendChild(column);
-	column = document.createElement("td");
-	column.innerHTML = pushedDate;
-	tableRow.appendChild(column);
-	column = document.createElement("td");
-	column.innerHTML = pCommit_total.toString();
-	tableRow.appendChild(column);
-	table.appendChild(tableRow);
+ 	for(let i = 0; i < columns; i++){ // for loop used because it's cleaner and requires less typing for expansion.
+		row_column = document.createElement("td");
+		switch(i){
+			case 0: row_column.appendChild(pButton); break;
+			case 1: row_column.innerHTML = date_pushed; break;
+			case 2: row_column.innerHTML = pCommit_total.toString(); break;
+			default: break;
+		}
+		table_row.appendChild(row_column);
+	}
+	table.appendChild(table_row);
 	//SortRepoTable();
 }
 
