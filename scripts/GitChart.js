@@ -85,7 +85,7 @@ export function DrawChart(){
 			* parseInt(githubmark.getAttribute("width"))));
 }
 
-function ReformatStringDate(pDate){
+export function ReformatStringDate(pDate){
 	let lDate;
 	switch(pDate.substring(0, 3)){
 		case "Jan": lDate = "1"; break;
@@ -104,7 +104,7 @@ function ReformatStringDate(pDate){
 	return lDate.concat(pDate.substring(3, pDate.length));
 }
 
-function SortRepoTable(){
+/* function SortRepoTable(){
 	let i, j, table, row_swap;
 	table = document.getElementById("table-details");
 
@@ -118,32 +118,6 @@ function SortRepoTable(){
 			}
 		}
 	}
-}
-
-export function UpdateTable(pButton = {}, pDate_pushed, pCommit_total){
-	if(pButton == null || undefined || '') return;
-	if(pCommit_total == null || undefined || '') return;
-	if(pDate_pushed	== null || undefined || '') return;
-
-	let table, table_row, date_pushed, columns, row_column;
-	
-	table = document.getElementById("table-details");
-	columns = table.children[0].children.length;
-	table_row = document.createElement("tr");
-	date_pushed = ReformatStringDate(pDate_pushed.substring(4, pDate_pushed.length));
-
- 	for(let i = 0; i < columns; i++){ // for loop used because it's cleaner and requires less typing for expansion.
-		row_column = document.createElement("td");
-		switch(i){
-			case 0: row_column.appendChild(pButton); break;
-			case 1: row_column.innerHTML = date_pushed; break;
-			case 2: row_column.innerHTML = pCommit_total.toString(); break;
-			default: break;
-		}
-		table_row.appendChild(row_column);
-	}
-	table.appendChild(table_row);
-	//SortRepoTable();
-}
+} */
 
 export function UpdateCommitCount(pNums){ g_Commits = pNums;}

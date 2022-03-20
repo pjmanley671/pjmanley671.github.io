@@ -3,6 +3,22 @@ export function convertTZ(date, tzString){
     return new Date((typeof date === "string"? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
 }
 
+// https://www.reddit.com/r/javascript/comments/ti1gfd/askjs_switch_case_worth_it_for_this/
+export function SendDataToTable(table, args=[]){
+	let table_row = document.createElement("tr")
+
+	for( let data of args ){
+		const row_column = document.createElement("td")
+		if( data instanceof Element )
+			row_column.appendChild(data)
+    else
+      row_column.innerHTML = data
+    
+		table_row.appendChild(row_column)
+	}
+	table.appendChild(table_row)
+}
+
 function displayTextWidth(text, font){
 	let canvas, context, metrics;
 	// https://www.w3docs.com/snippets/javascript/how-to-calculate-text-width-with-javascript.html

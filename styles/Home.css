@@ -1,0 +1,14 @@
+#Home .section{
+  margin-left: 1em;
+}
+
+#Home .section ul{
+  padding-left: 2.5em;
+  list-style-type: none;
+  font-size: small;
+}
+
+#Home .section ul li:first-child{
+  font-size: larger;
+  font-weight: bolder;
+}
