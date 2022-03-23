@@ -104,20 +104,30 @@ export function ReformatStringDate(pDate){
 	return lDate.concat(pDate.substring(3, pDate.length));
 }
 
-/* function SortRepoTable(){
-	let i, j, table, row_swap;
-	table = document.getElementById("table-details");
+export function SortRepoTable(){
+	let table = document.getElementById("table-details").children;
+	let new_table = [];
+	let table_dates = [];
+	let swap_index = 0;
 
-	for(i = 1; i < table.children.length; i++){
-		for(j = i+1; j < table.children.length; j++){
-			console.log(`Comparing: ${table.children[i].children[1].innerHTML} to ${table.children[j].children[1].innerHTML}`);
-			if(table.children[i].children[1].innerHTML > table.children[j].children[1].innerHTML){
-				row_swap = table.children[i];
-				table.children[i] = table.children[j];
-				table.children[j] = row_swap;
-			}
-		}
+	new_table.length = table.length - 1;
+	table_dates.length = new_table.length;
+
+
+	for(let i = 1; i < table.length; i++){
+		const row_date = table[i].children[1];
+		const date_values = row_date.innerHTML.split(" ");
+		const date = parseInt(date_values[0]) * 100 + parseInt(date_values[1]);
+		console.log(`${date_values[0]} + ${date_values[1]} === ${date}`);
+
+		new_table[i-1] = table[i];
+		table_dates[i-1] = date;
+
+		for(let j = i; j > 0; j++)
+			if(table_dates[j] > table_dates[i-1]) swap_index = j;
+
+		
 	}
-} */
+}
 
 export function UpdateCommitCount(pNums){ g_Commits = pNums;}

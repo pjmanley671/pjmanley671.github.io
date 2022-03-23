@@ -1,73 +1,86 @@
-import {DrawChart, UpdateCommitCount, ReformatStringDate} from './scripts/GitChart.js'
+import {DrawChart, UpdateCommitCount, ReformatStringDate, SortRepoTable} from './scripts/GitChart.js'
 import * as Utils from './scripts/Utils.js'
 import Config from './Data/General.js'
 
 var activePage
+const TIMEZONE = 'America/Chicago'
+const DATE_YEAR_CURRENT = (new Date()).getFullYear()
 
-async function GetAndHandleRepos(url=''){ // Updates only on PageLoad
-	if(url === null || url === undefined || url === '') return
-	let user_repos, repos_recent
-	var commit_count, date_year_current // using in nested async function.
-	repos_recent = []
+async function GetAndHandleRepos(p_Url=''){ // Updates only on PageLoad
+	if(p_Url === null || p_Url === undefined || p_Url === '') return
+	var commit_count // using in nested async function.
 	commit_count = new Uint32Array(document.getElementById("CircleGroup").children.length)
 
-	const TIMEZONE = 'America/Chicago'
-	user_repos = await (await fetch(url)).json()
-	date_year_current = (new Date()).getFullYear()
+	const doc_url = document.URL;
+	const user_repos = await(await (fetch(p_Url))).json();
+	const repos_recent = user_repos.filter(repo =>{ // Remove entries not updated this year.
 
-	user_repos.forEach(repo=>{
-		let repo_pushed_year
-		repo_pushed_year = (Utils.convertTZ(repo.pushed_at, TIMEZONE)).getFullYear()
-		if(repo_pushed_year === date_year_current) repos_recent.push(repo)
-	})
+		const repo_pushed_year = Utils.convertTZ(repo.pushed_at, TIMEZONE).getFullYear();
+		return (repo.size === 0)? false : repo_pushed_year == DATE_YEAR_CURRENT;
 
-	repos_recent.forEach(async function(repo){
-		let repo_pushed_date, commits, repo_commits_count, commit_url, repo_html_button, commits_page_number
-		
-		repo_commits_count = 0; commits_page_number = 1
-		repo_pushed_date = Utils.convertTZ(repo.pushed_at, TIMEZONE)
-		commit_url = repo.commits_url.slice(0, repo.commits_url.length - 6)
-		commit_url += "?per_page=100&page=" + commits_page_number
+	}).sort((a, b) => { // sort the new filtered array by most recent pushed_at date.
 
-		let fetch_response = await( fetch( commit_url ))
-		if( fetch_response.ok ){
-			commits = await( fetch_response ).json()
-			let doc_url = ""
-			doc_url = document.URL
+		const a_pushed_date = Utils.convertTZ(a.pushed_at, TIMEZONE);
+		const b_pushed_date = Utils.convertTZ(b.pushed_at, TIMEZONE);
 
-			// checks position to be 8 because the site name should be https:// and then the github site name.
-			if(doc_url.search(repo.name) === 8 || repo.name === "pjmanley671.github.io"){ // Uses my specific site to check for live server testing.
-				let site_update_latest = document.getElementById("LastSiteUpdate")
-				site_update_latest.innerHTML += commits[0].commit.message
-				Utils.AdjustAnimationSpeedByText("LastSiteUpdate")
-			}
+		return (a_pushed_date < b_pushed_date)? 1 : (a_pushed_date > b_pushed_date)? -1 : 0;
+	}); // end of repos_recent initialization
 
-			commits.forEach(cmt=>{
-				let commit_date
-				commit_date = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE)
-				if(commit_date.getFullYear() === date_year_current){
-					repo_commits_count++
-					commit_count[commit_date.getMonth()] += 1
-				}})
+	repos_recent.forEach((repo) => { // Genereate the table entries.
+		const repo_pushed_date = ReformatStringDate(
+			Utils.convertTZ(repo.pushed_at, TIMEZONE).toDateString().substring(4)
+		);
+		let repo_button = Utils.GenerateLinkButton(repo.name, repo.html_url);
+		repo_button.addEventListener("click", event =>{
+			let exit_confirm = false;
+			exit_confirm = confirm("Page will exit to Github repository: "+ event.target.innerHTML +". Continue?");
+			if(exit_confirm) window.open(event.target.value, "_self");
+		});
+		Utils.SendDataToTable(document.getElementById("table-details"), [repo_button, repo_pushed_date, 0])
+	});
+	
+	let commits_all = [];
+	for(let i = 0; i < repos_recent.length; i++){ // Iteration behavior for commits.
+		let commit_url = repos_recent[i].commits_url.slice(0, repos_recent[i].commits_url.length - 6) + "?per_page=100&page=";
+		let commits_page_number = 0;
+		let fetch_response, commits_array = [], commits_total = [];
+		do{ // For looping over pages that have a valid last entry == this year.
+			commits_page_number++;
+			fetch_response = await( fetch( commit_url+commits_page_number ) );
+			commits_array = await( fetch_response ).json();
 
-			repo_html_button = Utils.GenerateLinkButton(repo.name, repo.html_url)
-			repo_html_button.addEventListener("click", event=>{
-				let exit_confirm = false
-				exit_confirm = confirm("Page will exit to Github repository: "+ event.target.innerHTML +". Continue?")
-				if(exit_confirm) window.open(event.target.value, "_self")})
-			
-			let date_to_table = repo_pushed_date.toDateString().substring(4);
-			date_to_table = ReformatStringDate(date_to_table)
+			let commit_last = commits_array[commits_array.length-1];
+			let last_date = Utils.convertTZ(commit_last.commit.committer.date, TIMEZONE);
+			commits_array.forEach(cmt => { commits_total.push(cmt); })
+			if(last_date.getFullYear() != DATE_YEAR_CURRENT || commits_array.length < 100) // Prevents doing another page call.
+				break;
+		}while(true);
 
-			Utils.SendDataToTable(document.getElementById("table-details"), [repo_html_button, date_to_table, repo_commits_count])
-			DrawChart()
+		const commits_filtered = commits_total.filter(cmt =>{ // filter out out of date entries.
+			const c_d = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE).getFullYear();
+			return c_d === DATE_YEAR_CURRENT;
+		});
+
+		if(doc_url.search(repos_recent[i].name) === 8){ // Updates the footer with the sites latest commits message.
+			let site_update_latest = document.getElementById("LastSiteUpdate");
+			site_update_latest.innerHTML += commits_filtered[0].commit.message;
+			Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
 		}
-	})
-	UpdateCommitCount(commit_count)
+
+		let repo_row = document.getElementById("table-details").children[i + 1];
+		repo_row.children[2].innerHTML = commits_filtered.length;
+		commits_filtered.forEach(cmt => { commits_all.push(cmt); });
+	}
+	commits_all.forEach(cmt =>{ // Updates the months commit value.
+		const commit_month = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE).getMonth();
+		commit_count[commit_month]++;
+	});
+	UpdateCommitCount(commit_count);
+	DrawChart();
 }
 
 function GenerateHeaderButtons(){
-	var navbar, dropdown_content
+	let navbar, dropdown_content
 	navbar = document.getElementById("navbar")
 	dropdown_content = document.getElementById("dropdown-content")
 
@@ -104,7 +117,7 @@ function GenerateHeaderButtons(){
 	})
 }
 
-const Resize = () =>{
+const Resize=()=>{
 	if(window.innerWidth > 0){
 		let currentPage = document.getElementById(activePage)
 		currentPage.style.display = (window.innerWidth > 800)? "flex" : "inline-block"
@@ -120,7 +133,8 @@ const Resize = () =>{
 	}
 }
 
-const PageLoad=()=>{
+
+async function PageLoad(){
 	GenerateHeaderButtons()
 	let user_name = document.URL
 	let host = window.location.protocol + "//" + window.location.host + "/"
@@ -128,7 +142,7 @@ const PageLoad=()=>{
 	if(user_name == host) user_name = 'pjmanley671'
 	else user_name = user_name.slice(8, user_name.length - 10)
 
-	GetAndHandleRepos(`https://api.github.com/users/${user_name}/repos`)
+	GetAndHandleRepos(`https://api.github.com/users/${user_name}/repos`);
 }
 
 window.onload = PageLoad

@@ -7,16 +7,12 @@ export function convertTZ(date, tzString){
 export function SendDataToTable(table, args=[]){
 	let table_row = document.createElement("tr")
 
-	for( let data of args ){
-		const row_column = document.createElement("td")
-		if( data instanceof Element )
-			row_column.appendChild(data)
-    else
-      row_column.innerHTML = data
-    
-		table_row.appendChild(row_column)
+	for( const data of args ){
+		let row_column = document.createElement("td");
+		(data instanceof Element)? row_column.appendChild(data) : row_column.innerHTML = data;
+		table_row.appendChild(row_column);
 	}
-	table.appendChild(table_row)
+	table.appendChild(table_row);
 }
 
 function displayTextWidth(text, font){
