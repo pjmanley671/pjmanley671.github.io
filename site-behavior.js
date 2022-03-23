@@ -1,4 +1,4 @@
-import {DrawChart, UpdateCommitCount, ReformatStringDate, SortRepoTable} from './scripts/GitChart.js'
+import {DrawChart, UpdateCommitCount, ReformatStringDate} from './scripts/GitChart.js'
 import * as Utils from './scripts/Utils.js'
 import Config from './Data/General.js'
 
@@ -66,7 +66,7 @@ async function GetAndHandleRepos(p_Url=''){ // Updates only on PageLoad
 			site_update_latest.innerHTML += commits_filtered[0].commit.message;
 			Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
 		}
-
+		// Update the table entry for this repo
 		let repo_row = document.getElementById("table-details").children[i + 1];
 		repo_row.children[2].innerHTML = commits_filtered.length;
 		commits_filtered.forEach(cmt => { commits_all.push(cmt); });
@@ -79,36 +79,32 @@ async function GetAndHandleRepos(p_Url=''){ // Updates only on PageLoad
 	DrawChart();
 }
 
-function GenerateHeaderButtons(){
-	let navbar, dropdown_content
-	navbar = document.getElementById("navbar")
-	dropdown_content = document.getElementById("dropdown-content")
+const HeaderButtonsMap = [
+	(p_button = Node) => { // Index 0 for external site navigation;
+		p_button.addEventListener("click", event=>{
+			const exit_confirm = confirm("Page will transfer to "+ event.target.className +" project: "+ event.target.innerHTML +". Continue?");
+			if(exit_confirm) window.open(event.target.value, "_self");
+		});
+		document.getElementById("dropdown-content").appendChild(p_button);
+	},
+	(p_button= Node) => { // Index 1 for this site navigation.
+		p_button.addEventListener("click", event=>{
+			Utils.OpenPage(event.target, "black");
+			activePage = event.target.innerHTML;
+			Resize();
+		});
+		document.getElementById("navbar").appendChild(p_button);
+	}
+];
 
+function GenerateHeaderButtons(){
 	Config.Links.forEach(navLink=>{
 		let nav_button
 		nav_button = Utils.GenerateLinkButton(navLink.Name, navLink.Link)
-		nav_button.className = navLink.Confirmation.message_format
+		nav_button.className = navLink.Confirmation.message_format;
 
-		switch(navLink.Confirmation.message_format){
-			case "Navbar-link":
-				nav_button.addEventListener("click", event=>{
-					Utils.OpenPage(event.target, "black")
-					activePage = event.target.innerHTML
-					Resize()
-				})
-				navbar.appendChild(nav_button)
-				break
-			case "Perlenspiel":
-				nav_button.addEventListener("click", event=>{
-					let exit_confirm = false
-					exit_confirm = confirm("Page will transfer to perlesnpiel project: "+ event.target.innerHTML +". Continue?")
-					if(exit_confirm) window.open(event.target.value, "_self")
-				})
-				dropdown_content.appendChild(nav_button)
-				break
-			default:
-				break
-		}
+		HeaderButtonsMap[Number(nav_button.className == "Navbar-link")](nav_button); // buttons behavior only changes when it remains on site or leaves.
+
 		if(nav_button.innerHTML == "Home"){
 			nav_button.style.backgroundColor = "black"
 			activePage = nav_button.innerHTML
@@ -117,30 +113,28 @@ function GenerateHeaderButtons(){
 	})
 }
 
+const ResizeMap = {
+	"Home" : () =>{DrawChart();},
+	"Showcase" : () =>{},
+	"Contact" : () =>{}
+}
+
 const Resize=()=>{
-	if(window.innerWidth > 0){
-		let currentPage = document.getElementById(activePage)
-		currentPage.style.display = (window.innerWidth > 800)? "flex" : "inline-block"
-	}
-	switch(activePage){
-		case "Home":
-			DrawChart()
-			break;
-		case "Contact":
-			break
-		default:
-			break
-	}
+	let currentPage = document.getElementById(activePage);
+	if(window.innerWidth > 0)
+		currentPage.style.display = (window.innerWidth > 800)? "flex" : "inline-block";
+
+	ResizeMap[activePage]();
 }
 
 
-async function PageLoad(){
+function PageLoad(){
 	GenerateHeaderButtons()
 	let user_name = document.URL
 	let host = window.location.protocol + "//" + window.location.host + "/"
 
-	if(user_name == host) user_name = 'pjmanley671'
-	else user_name = user_name.slice(8, user_name.length - 10)
+	// user_name.slice 8 removes https:// and (user_name.length - 10) removes .github.io
+	user_name = (user_name == host)? 'pjmanley671' : user_name.slice(8, user_name.length - 10);
 
 	GetAndHandleRepos(`https://api.github.com/users/${user_name}/repos`);
 }
