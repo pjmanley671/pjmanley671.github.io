@@ -49,6 +49,7 @@ export function GenerateLinkButton(pText, pUrl){
   let document_button = document.createElement("button");
 	document_button.innerHTML = pText;
   document_button.value = pUrl;
+	document_button.id = pText + "-button";
   return document_button;
 }
 

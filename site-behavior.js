@@ -8,11 +8,19 @@ const DATE_YEAR_CURRENT = (new Date()).getFullYear()
 
 async function GetAndHandleRepos(p_Url=''){ // Updates only on PageLoad
 	if(p_Url === null || p_Url === undefined || p_Url === '') return
-	var commit_count // using in nested async function.
-	commit_count = new Uint32Array(document.getElementById("CircleGroup").children.length)
 
 	const doc_url = document.URL;
-	const user_repos = await(await (fetch(p_Url))).json();
+	const user_fetch = await(fetch(p_Url));
+	if(user_fetch.ok != true){
+		let git_table_row = document.getElementById("table-details");
+		let error_column = document.createElement("td");
+		error_column.innerHTML = "Error fetching from " + p_Url;
+		git_table_row.appendChild(error_column);
+		return;
+	}
+
+	const user_repos = await(user_fetch.json())
+
 	const repos_recent = user_repos.filter(repo =>{ // Remove entries not updated this year.
 
 		const repo_pushed_year = Utils.convertTZ(repo.pushed_at, TIMEZONE).getFullYear();
@@ -40,18 +48,19 @@ async function GetAndHandleRepos(p_Url=''){ // Updates only on PageLoad
 	});
 	
 	let commits_all = [];
+	const table_details = document.getElementById("table-details").children;
 	for(let i = 0; i < repos_recent.length; i++){ // Iteration behavior for commits.
-		let commit_url = repos_recent[i].commits_url.slice(0, repos_recent[i].commits_url.length - 6) + "?per_page=100&page=";
+		const commit_url = repos_recent[i].commits_url.slice(0, repos_recent[i].commits_url.length - 6) + "?per_page=100&page=";
 		let commits_page_number = 0;
 		let fetch_response, commits_array = [], commits_total = [];
-		do{ // For looping over pages that have a valid last entry == this year.
+		do{ // Loop over pages that have a valid last entry date == this year.
 			commits_page_number++;
 			fetch_response = await( fetch( commit_url+commits_page_number ) );
 			commits_array = await( fetch_response ).json();
 
 			let commit_last = commits_array[commits_array.length-1];
 			let last_date = Utils.convertTZ(commit_last.commit.committer.date, TIMEZONE);
-			commits_array.forEach(cmt => { commits_total.push(cmt); })
+			Array.prototype.push.apply(commits_total, commits_array);
 			if(last_date.getFullYear() != DATE_YEAR_CURRENT || commits_array.length < 100) // Prevents doing another page call.
 				break;
 		}while(true);
@@ -67,13 +76,17 @@ async function GetAndHandleRepos(p_Url=''){ // Updates only on PageLoad
 			Utils.AdjustAnimationSpeedByText("LastSiteUpdate");
 		}
 		// Update the table entry for this repo
-		let repo_row = document.getElementById("table-details").children[i + 1];
+		let repo_row = table_details[i + 1];
 		repo_row.children[2].innerHTML = commits_filtered.length;
 		commits_filtered.forEach(cmt => { commits_all.push(cmt); });
 	}
+
+	let commit_count
+	commit_count = new Uint32Array(document.getElementById("CircleGroup").children.length)
+
 	commits_all.forEach(cmt =>{ // Updates the months commit value.
 		const commit_month = Utils.convertTZ(cmt.commit.committer.date, TIMEZONE).getMonth();
-		commit_count[commit_month]++;
+		commit_count[commit_month] += Number(commit_month < commit_count.length);
 	});
 	UpdateCommitCount(commit_count);
 	DrawChart();
@@ -101,16 +114,11 @@ function GenerateHeaderButtons(){
 	Config.Links.forEach(navLink=>{
 		let nav_button
 		nav_button = Utils.GenerateLinkButton(navLink.Name, navLink.Link)
-		nav_button.className = navLink.Confirmation.message_format;
+		nav_button.className = navLink.Confirmation.message_format
 
 		HeaderButtonsMap[Number(nav_button.className == "Navbar-link")](nav_button); // buttons behavior only changes when it remains on site or leaves.
-
-		if(nav_button.innerHTML == "Home"){
-			nav_button.style.backgroundColor = "black"
-			activePage = nav_button.innerHTML
-			nav_button.click()
-		}
-	})
+	});
+	document.getElementById("Home-button").click(); // click the main page.
 }
 
 const ResizeMap = {
@@ -120,15 +128,18 @@ const ResizeMap = {
 }
 
 const Resize=()=>{
-	let currentPage = document.getElementById(activePage);
-	if(window.innerWidth > 0)
+	if(window.innerWidth > 0){ // Update the window layout first
+		let currentPage = document.getElementById(activePage);
 		currentPage.style.display = (window.innerWidth > 800)? "flex" : "inline-block";
-
-	ResizeMap[activePage]();
+	}
+	ResizeMap[activePage](); // Resize the active elements
 }
 
-
 function PageLoad(){
+	let init_commits = new Uint32Array(document.getElementById("CircleGroup").children.length);
+	for(let index in init_commits) index = 0;
+	UpdateCommitCount(init_commits);
+
 	GenerateHeaderButtons()
 	let user_name = document.URL
 	let host = window.location.protocol + "//" + window.location.host + "/"

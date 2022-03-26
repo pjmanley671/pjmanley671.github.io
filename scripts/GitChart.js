@@ -1,87 +1,88 @@
-var g_Commits = new Uint32Array(document.getElementById("CircleGroup").children.length);
+const chart_months = document.getElementById("CircleGroup");
+const chart_svg = document.getElementById("chart-x-definitions");
+const chart = document.getElementById("chart");
+const GOAL = 10;
+
+var g_Commits = new Uint32Array(chart_months.length);
 
 function ResetMonths(){
-	var svg, months, xOffset, xDist;
+	const width = chart_svg.clientWidth;
+	let months, xOffset, xDist;
 
-	svg = document.getElementById("chart-x-definitions");
-	months = svg.children[0];
-	xOffset	= svg.clientWidth / 50;
-	xDist = svg.clientWidth / months.children.length;
+	months = chart_svg.children[0];
+	xOffset	= width / 50;
+	xDist = width / months.children.length;
 
 	for(let i = 0; i < months.children.length; i++)
 		months.children[i].setAttribute("x", String(i * xDist + xOffset));
 }
 
-function ResetPoints(pSVG){
-	var points, xOffset;
+function ScalePointsX(){
+	let points, xOffset;
 
-	points = document.getElementById("CircleGroup").children;
-	xOffset= pSVG.clientWidth / 30
+	points = chart_months.children;
+	xOffset= chart.clientWidth / 30
 	
-	for(let p = 0; p < points.length; p++){
-		points[p].setAttribute("cx", String(p * pSVG.clientWidth / points.length + xOffset));
-		points[p].setAttribute("cy", String(pSVG.clientHeight));
-	}
+	for(let p = 0; p < points.length; p++)
+		points[p].setAttribute("cx", String(p * chart.clientWidth / points.length + xOffset));
 }
 
-function SetPointPositions(pSVG, pGoal){
-	var points, yDist
+function SetPointY(){
+	let points, yDist
 
-	points = document.getElementById("CircleGroup").children;
-	yDist = pSVG.clientHeight / pGoal
+	points = chart_months.children;
+	yDist = chart.clientHeight / GOAL
 
 	for(let i = 0; i < points.length; i++){
-		let height;
-		height = (g_Commits[i] >= pGoal) ? 0 : 
-			pSVG.clientHeight - g_Commits[i] * yDist;
+		const height = chart.clientHeight - g_Commits[i] * yDist;
+		const isNotGoalHeight = Number(g_Commits[i] < GOAL);
 
-		points[i].setAttribute("cy", String(height));
+		points[i].setAttribute("cy", String(isNotGoalHeight * height));
 	}
 }
 
-function ResetLines(pSVG, pGoal){
-	const ONE = 1;
+const LinesMap = {
+	"x-axis": (pLine, lineNumber)=>{
+		pLine.setAttribute("y2", String(chart.clientHeight));
+		pLine.setAttribute("x1", String(chart.clientLeft + 1));
+		pLine.setAttribute("x2", String(chart.clientLeft + 1));
+		return lineNumber;
+	},
+	"y-axis": (pLine, lineNumber)=>{
+		pLine.setAttribute("x2", String(chart.clientWidth));
+		pLine.setAttribute("y1", String(chart.clientHeight - 1));
+		pLine.setAttribute("y2", String(chart.clientHeight - 1));
+		return lineNumber;
+	},
+	"": (pLine, lineNumber)=>{
+		lineNumber++;
+		pLine.setAttribute("x2", String(chart.clientWidth));
+		pLine.setAttribute(
+			"y1", String(chart.clientHeight - lineNumber * chart.clientHeight / GOAL));
+		pLine.setAttribute("y2", String(chart.clientHeight - lineNumber * chart.clientHeight / GOAL));
+		return lineNumber;
+	}
+};
+
+function ResetLines(){
 	var lineNumber, lines;
 
 	lineNumber = 0;
-	lines = document.getElementById("LineGroup").children;
-	for(let i = 0; i < lines.length; i++)
-		switch(lines[i].id){
-			case "x-axis":
-				lines[i].setAttribute("y2", String(pSVG.clientHeight));
-				lines[i].setAttribute("x1", String(pSVG.clientLeft + ONE));
-				lines[i].setAttribute("x2", String(pSVG.clientLeft + ONE));
-				break;
-			case "y-axis": 
-				lines[i].setAttribute("x2", String(pSVG.clientWidth));
-				lines[i].setAttribute("y1", String(pSVG.clientHeight - ONE));
-				lines[i].setAttribute("y2", String(pSVG.clientHeight - ONE));
-				break;
-			default: 
-				lineNumber++;
-				lines[i].setAttribute("x2", String(pSVG.clientWidth));
-				lines[i].setAttribute(
-					"y1", String(pSVG.clientHeight - lineNumber * pSVG.clientHeight / pGoal));
-				lines[i].setAttribute(
-					"y2", String(pSVG.clientHeight - lineNumber * pSVG.clientHeight / pGoal));
-				break;
-		}
+	lines = chart.children[2].children;
+	for(let line of lines) lineNumber = LinesMap[line.id](line, lineNumber);
 }
 
 export function DrawChart(){
-	var svg, goal, githubmark;
+	var githubmark;
 
-	goal = 10;
-	svg = document.getElementById("chart");
-
-	ResetLines(svg, goal);
+	ResetLines();
 	ResetMonths();
-	ResetPoints(svg);
-	SetPointPositions(svg, goal);
+	ScalePointsX();
+	SetPointY();
 
-	githubmark = svg.children[0];
+	githubmark = chart.children[0];
 	githubmark.setAttribute( "x",
-		String(0.5 * svg.clientWidth - 0.75 
+		String(0.5 * chart.clientWidth - 0.75 
 			* parseInt(githubmark.getAttribute("width"))));
 }
 
