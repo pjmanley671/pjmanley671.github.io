@@ -33,6 +33,13 @@ export default
             },
             "Mobile": true
         },{
+            "Name":"Showcase",
+            "Link":"./index.html",
+            "Confirmation":{
+                "confirm":false,
+                "message_format":"Navbar-link"
+            }
+        },{
             "Name": "Contact",
             "Link": "./index.html",
             "Confirmation": {

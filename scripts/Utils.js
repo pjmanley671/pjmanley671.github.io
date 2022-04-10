@@ -1,12 +1,15 @@
 // https://stackoverflow.com/questions/10087819/convert-date-to-another-timezone-in-javascript
 export function convertTZ(date, tzString){
-    return new Date((typeof date === "string"? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
+    return new Date(
+			( typeof date === "string"
+			? new Date(date) // if it's a string object
+			: date // if it is a date object
+			).toLocaleString("en-US", {timeZone: tzString}));
 }
 
 // https://www.reddit.com/r/javascript/comments/ti1gfd/askjs_switch_case_worth_it_for_this/
 export function SendDataToTable(table, args=[]){
 	let table_row = document.createElement("tr")
-
 	for( const data of args ){
 		let row_column = document.createElement("td");
 		(data instanceof Element)? row_column.appendChild(data) : row_column.innerHTML = data;
@@ -54,12 +57,12 @@ export function GenerateLinkButton(pText, pUrl){
 }
 
 export function OpenPage(element, color){
-	let tab_content, tab_links, active_page, display_width;
+	let tab_content, tab_links, active_page;
+	const display_width = (window.innerWidth > 0)? window.innerWidth: screen.width;
 
 	tab_content = document.getElementsByClassName("flexbox-container");
 	tab_links = document.getElementsByClassName("Navbar-link");
 	active_page = document.getElementById(element.innerHTML);
-	display_width = (window.innerWidth > 0)? window.innerWidth: screen.width;
 
 	for (let content of tab_content) content.style.display = "none";
 	for (let button of tab_links) button.style.backgroundColor = "#555";

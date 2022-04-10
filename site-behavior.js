@@ -1,13 +1,13 @@
 import {DrawChart, UpdateCommitCount, ReformatStringDate} from './scripts/GitChart.js'
 import * as Utils from './scripts/Utils.js'
 import Config from './Data/General.js'
+import Showcase from './Data/ShowcaseTableDetails.js'
 
 var activePage
 const TIMEZONE = 'America/Chicago'
 const DATE_YEAR_CURRENT = (new Date()).getFullYear()
 
-async function GetAndHandleRepos(p_Url=''){ // Updates only on PageLoad
-	if(p_Url === null || p_Url === undefined || p_Url === '') return
+async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
 
 	const doc_url = document.URL;
 	const user_fetch = await(fetch(p_Url));
@@ -78,7 +78,7 @@ async function GetAndHandleRepos(p_Url=''){ // Updates only on PageLoad
 		// Update the table entry for this repo
 		let repo_row = table_details[i + 1];
 		repo_row.children[2].innerHTML = commits_filtered.length;
-		commits_filtered.forEach(cmt => { commits_all.push(cmt); });
+		commits_filtered.forEach(cmt => commits_all.push(cmt));
 	}
 
 	let commit_count
@@ -134,6 +134,32 @@ const Resize=()=>{
 	}
 	ResizeMap[activePage](); // Resize the active elements
 }
+const CreateExampleDropdownTable=() => {
+	let table = document.getElementById("Showcase-Table");
+
+	Utils.SendDataToTable(table, ["Text", "ExampleScript.txt", "Example"]);
+	let row_new = table.children[table.children.length - 1]
+
+	row_new.addEventListener("click", event=>{
+		let row = event.target.parentElement;
+		let code_output = document.getElementById("code-output").children[0];
+		let output_directory = "./ShowcaseFiles";
+
+		output_directory = output_directory.concat( "/", row.children[0].innerHTML.toString());
+		output_directory = output_directory.concat( "/", row.children[2].innerHTML.toString());
+		output_directory = output_directory.concat( "/", row.children[1].innerHTML.toString());
+
+		if(code_output.children.length > 0) code_output.removeChild(code_output.children[0]);
+
+		const output_object = document.createElement("object");
+		output_object.setAttribute("data", output_directory);
+		output_object.setAttribute("height", "100%");
+		output_object.setAttribute("width", "100%");
+
+		console.log(output_object);
+		code_output.appendChild(output_object);
+	});
+}
 
 function PageLoad(){
 	let init_commits = new Uint32Array(document.getElementById("CircleGroup").children.length);
@@ -148,6 +174,8 @@ function PageLoad(){
 	user_name = (user_name == host)? 'pjmanley671' : user_name.slice(8, user_name.length - 10);
 
 	GetAndHandleRepos(`https://api.github.com/users/${user_name}/repos`);
+
+	CreateExampleDropdownTable();
 }
 
 window.onload = PageLoad
