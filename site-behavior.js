@@ -2,7 +2,7 @@ import {DrawChart, UpdateCommitCount, ReformatStringDate} from './scripts/GitCha
 import * as Utils from './scripts/Utils.js'
 import Config from './Data/General.js'
 import Showcase from './Data/ShowcaseTableDetails.js'
-import './scripts/ArrayExtensions.js'
+import './ShowcaseFiles/JavaScript/Github.io Files/ArrayExtensions.js'
 
 var activePage
 const TIMEZONE = 'America/Chicago'
@@ -138,36 +138,35 @@ const Resize=()=>{
 const CreateExampleDropdownTable=() => {
 	let table = document.getElementById("Showcase-Table");
 
-	for(let i = 0; i < Showcase.TableDetails.length; ){
+	while(Showcase.TableDetails.length){ // Populate the table.
 		let [fileType, fileName, fileGroup] = Showcase.TableDetails;
-		Showcase.TableDetails.shiftN(3);
-		
+		Showcase.TableDetails.shiftN(3);	
 		Utils.SendDataToTable(table, [fileType, fileName, fileGroup]);
-
 	}
+
+	let [rowHeaders, ...rows] = table.children; // seperate the table headers from the rest of the table rows.
+
+	rows.forEach((row) => { // add the script call event to add the content of the file to the displayable section.
+		row.addEventListener("click", event=>{
+			let thisRow = (event.target.tagName == "TD")? event.target.parentElement : event.target;
+			let code_output = document.getElementById("code-output");
+			let output_directory = "./ShowcaseFiles";
 	
-	/* 	let row_new = table.children[table.children.length - 1]
+			output_directory = output_directory.concat( "/", thisRow.children[0].innerHTML.toString());
+			output_directory = output_directory.concat( "/", thisRow.children[2].innerHTML.toString());
+			output_directory = output_directory.concat( "/", thisRow.children[1].innerHTML.toString());
+	
+			if(code_output.children.length > 0) code_output.removeChild(code_output.children[0]);
+	
+			const output_object = document.createElement("object");
+			output_object.setAttribute("data", output_directory);
+			output_object.setAttribute("height", "100%");
+			output_object.setAttribute("width", "100%");
 
-	row_new.addEventListener("click", event=>{
-		let row = event.target.parentElement;
-		let code_output = document.getElementById("code-output");
-		let output_directory = "./ShowcaseFiles";
-
-		output_directory = output_directory.concat( "/", row.children[0].innerHTML.toString());
-		output_directory = output_directory.concat( "/", row.children[2].innerHTML.toString());
-		output_directory = output_directory.concat( "/", row.children[1].innerHTML.toString());
-
-		if(code_output.children.length > 0) code_output.removeChild(code_output.children[0]);
-
-		const output_object = document.createElement("object");
-		output_object.setAttribute("data", output_directory);
-		output_object.setAttribute("height", "100%");
-		output_object.setAttribute("width", "100%");
-
-		console.log(output_object);
-		code_output.appendChild(output_object); */
-/* 	});
- */}
+			code_output.appendChild(output_object);
+		});
+	});
+}
 
 function PageLoad(){
 	let init_commits = new Uint32Array(document.getElementById("CircleGroup").children.length);
