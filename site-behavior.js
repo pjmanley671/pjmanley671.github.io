@@ -2,6 +2,7 @@ import {DrawChart, UpdateCommitCount, ReformatStringDate} from './scripts/GitCha
 import * as Utils from './scripts/Utils.js'
 import Config from './Data/General.js'
 import Showcase from './Data/ShowcaseTableDetails.js'
+import './scripts/ArrayExtensions.js'
 
 var activePage
 const TIMEZONE = 'America/Chicago'
@@ -140,10 +141,9 @@ const CreateExampleDropdownTable=() => {
 	for(let i = 0; i < Showcase.TableDetails.length; ){
 		let [fileType, fileName, fileGroup] = Showcase.TableDetails;
 		Showcase.TableDetails.shiftN(3);
-/* 		Showcase.TableDetails.shift();
-		Showcase.TableDetails.shift();
-		Showcase.TableDetails.shift(); */
+		
 		Utils.SendDataToTable(table, [fileType, fileName, fileGroup]);
+
 	}
 	
 	/* 	let row_new = table.children[table.children.length - 1]
