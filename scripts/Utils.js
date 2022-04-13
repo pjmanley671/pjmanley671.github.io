@@ -70,3 +70,8 @@ export function OpenPage(element, color){
 	active_page.style.display = (display_width > 800)? "flex" : "inline-block";
 	element.style.backgroundColor = color;
 }
+
+Array.prototype.shiftN = function(value_n){
+	for(let i = 0; i < value_n; i++)
+		this.shift();
+}

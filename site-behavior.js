@@ -137,12 +137,20 @@ const Resize=()=>{
 const CreateExampleDropdownTable=() => {
 	let table = document.getElementById("Showcase-Table");
 
-	Utils.SendDataToTable(table, ["Text", "ExampleScript.txt", "Example"]);
-	let row_new = table.children[table.children.length - 1]
+	for(let i = 0; i < Showcase.TableDetails.length; ){
+		let [fileType, fileName, fileGroup] = Showcase.TableDetails;
+		Showcase.TableDetails.shiftN(3);
+/* 		Showcase.TableDetails.shift();
+		Showcase.TableDetails.shift();
+		Showcase.TableDetails.shift(); */
+		Utils.SendDataToTable(table, [fileType, fileName, fileGroup]);
+	}
+	
+	/* 	let row_new = table.children[table.children.length - 1]
 
 	row_new.addEventListener("click", event=>{
 		let row = event.target.parentElement;
-		let code_output = document.getElementById("code-output").children[0];
+		let code_output = document.getElementById("code-output");
 		let output_directory = "./ShowcaseFiles";
 
 		output_directory = output_directory.concat( "/", row.children[0].innerHTML.toString());
@@ -157,9 +165,9 @@ const CreateExampleDropdownTable=() => {
 		output_object.setAttribute("width", "100%");
 
 		console.log(output_object);
-		code_output.appendChild(output_object);
-	});
-}
+		code_output.appendChild(output_object); */
+/* 	});
+ */}
 
 function PageLoad(){
 	let init_commits = new Uint32Array(document.getElementById("CircleGroup").children.length);
