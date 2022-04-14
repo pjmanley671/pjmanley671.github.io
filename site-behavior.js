@@ -117,7 +117,7 @@ function GenerateHeaderButtons(){
 		nav_button = Utils.GenerateLinkButton(navLink.Name, navLink.Link)
 		nav_button.className = navLink.Confirmation.message_format
 
-		HeaderButtonsMap[Number(nav_button.className == "Navbar-link")](nav_button); // buttons behavior only changes when it remains on site or leaves.
+		HeaderButtonsMap[(nav_button.className == "Navbar-link")? 1 : 0](nav_button); // buttons behavior only changes when it remains on site or leaves.
 	});
 	document.getElementById("Home-button").click(); // click the main page.
 }
