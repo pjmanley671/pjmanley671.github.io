@@ -4,6 +4,7 @@ export default
   TableDetails:[
     "Text", "ExampleScript.txt", "Example",
     "JavaScript", "ArrayExtensions.js", "Github.io Files",
-    "JavaScript", "SingleTestRun.js", "TestEnvironment"
+    "JavaScript", "SingleTestRun.js", "Expanding Knowledge",
+    "JavaScript", "Destructuring.js", "Expanding Knowledge"
   ]
 }
