@@ -9,7 +9,6 @@ const TIMEZONE = 'America/Chicago'
 const DATE_YEAR_CURRENT = (new Date()).getFullYear()
 
 async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
-
 	const doc_url = document.URL;
 	const user_fetch = await(fetch(p_Url));
 	if(user_fetch.ok != true){
@@ -32,7 +31,7 @@ async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
 		const a_pushed_date = Utils.convertTZ(a.pushed_at, TIMEZONE);
 		const b_pushed_date = Utils.convertTZ(b.pushed_at, TIMEZONE);
 
-		return (a_pushed_date < b_pushed_date)? 1 : (a_pushed_date > b_pushed_date)? -1 : 0;
+		return Number(a_pushed_date < b_pushed_date) + Number(a_pushed_date > b_pushed_date);
 	}); // end of repos_recent initialization
 
 	repos_recent.forEach((repo) => { // Genereate the table entries.
