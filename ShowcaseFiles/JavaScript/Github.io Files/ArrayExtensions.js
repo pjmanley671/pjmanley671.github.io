@@ -40,7 +40,7 @@ Array.prototype.swap_safe = function(index_one, index_two){
       this[index_one] = this[index_two];
       this[index_two] = t;
     }else{
-      throw new Error("Could not validate index positions in array:\n",
+      throw new Error("Invalid index positions:\n",
         this.Enumerator.caller, "\n",
         "Position: ", index_first, "\n",
         "Position: ", index_two, "\n");
@@ -57,10 +57,10 @@ Array.prototype.swap_numbers = function(index_one, index_two){
       this[index_two] = this[index_one] - this[index_two];
       this[index_one] -= this[index_two];
     }else{
-      throw new Error("Could not validate index positions in array:\n",
+      throw new Error("Invalid index positions:\n",
+      this.Enumerator.caller, "\n",
       "Position: ", index_one, " value: ", this[index_one], "\n",
-      "Position: ", index_two, " value: ", this[index_two], "\n",
-      this.Enumerator.caller);
+      "Position: ", index_two, " value: ", this[index_two], "\n");
     }
   }catch(pE){
     console.log(pE.message);
