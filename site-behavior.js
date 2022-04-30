@@ -31,7 +31,7 @@ async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
 		const a_pushed_date = Utils.convertTZ(a.pushed_at, TIMEZONE);
 		const b_pushed_date = Utils.convertTZ(b.pushed_at, TIMEZONE);
 
-		return Number(a_pushed_date < b_pushed_date) + Number(a_pushed_date > b_pushed_date);
+		return (a_pushed_date < b_pushed_date) ? 1 : 0 - Number(a_pushed_date > b_pushed_date);
 	}); // end of repos_recent initialization
 
 	repos_recent.forEach((repo) => { // Genereate the table entries.

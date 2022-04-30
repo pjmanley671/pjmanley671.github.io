@@ -2,65 +2,67 @@
 /* Simple but useful array exteinsions. */
 
 Array.prototype.shiftN = function(value_n = 1){
-  if(value_n < 1) return;
-  for(let i = value_n; i; i--) this.shift();
+  if(value_n)
+    for(let i = value_n; i; i--)
+      this.shift();
 }
 
 Array.prototype.popN = function(value_n = 1){
-  if(value_n < 1) return;
-  for(let i = value_n; i; i--) this.pop();
+  if(value_n)
+    for(let i = value_n; i; i--)
+      this.pop();
 }
 
 Array.prototype.lastElement = () =>{
-  return (this.length > 0)? this[this.length-1] : null;
+  return (this.length)? this[this.length-1] : null;
 }
 
 Array.prototype.firstElement = function(){
-  let value_first, value_rest;
+  let ele;
   try{
-    [value_first, ...value_rest] = this;
-    if(typeof value_first == "undefined")
-      throw Error("Error retrieving first element in array ", this.Enumerator.caller);
-  }catch (pError){
-    console.error(pError.message);
+    [ele] = this;
+    if(typeof ele == "undefined")
+      throw Error("Failed to retrieve first element: ", this.Enumerator.caller);
+  }catch (pE){
+    console.error(pE.message);
   }
-  return value_first;
+  return ele;
 }
 
 Array.prototype.validate = function(index = 0){
-  return (this.length) ? (index >= 0 && index < this.length) : false;
+  return (this.length) ? (index + 1 && index < this.length) : false;
 }
 
-Array.prototype.swap_safe = function(index_first, index_second){
+Array.prototype.swap_safe = function(index_one, index_two){
   try{
-    if(this.validate(index_first) && index_second < this.length){
-      const temp = this[index_first];
-      this[index_first] = this[index_second];
-      this[index_second] = temp;
+    if(this.validate(index_one) && index_two < this.length){
+      const t = this[index_one];
+      this[index_one] = this[index_two];
+      this[index_two] = t;
     }else{
       throw new Error("Could not validate index positions in array:\n",
-      this.Enumerator.caller, "\n",
-      "Position: ", index_first, "\n",
-      "Position: ", index_second, "\n");
+        this.Enumerator.caller, "\n",
+        "Position: ", index_first, "\n",
+        "Position: ", index_two, "\n");
     }
-  }catch(pError){
-    console.error(pError.message);
+  }catch(pE){
+    console.error(pE.message);
   }
 }
 
-Array.prototype.swap_numbers = function(index_first, index_second){
+Array.prototype.swap_numbers = function(index_one, index_two){
   try{
-    if(this.validate(index_first) && index_second < this.length){
-      this[index_first] += this[index_second];
-      this[index_second] = this[index_first] - this[index_second];
-      this[index_first] -= this[index_second];
+    if(this.validate(index_one) && index_two < this.length){
+      this[index_one] += this[index_two];
+      this[index_two] = this[index_one] - this[index_two];
+      this[index_one] -= this[index_two];
     }else{
       throw new Error("Could not validate index positions in array:\n",
-      "Position: ", index_first, " value: ", this[index_first], "\n",
-      "Position: ", index_second, " value: ", this[index_second], "\n",
+      "Position: ", index_one, " value: ", this[index_one], "\n",
+      "Position: ", index_two, " value: ", this[index_two], "\n",
       this.Enumerator.caller);
     }
-  }catch(pError){
-    console.log(pError.message);
+  }catch(pE){
+    console.log(pE.message);
   }
 }
