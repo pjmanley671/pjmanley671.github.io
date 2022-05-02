@@ -1,0 +1,90 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using System;
+
+[CustomEditor(typeof(Sound))]
+public class SoundsEditor : Editor
+{
+    Sound _sound;
+    public static GameObject soundGameObject;
+    public static AudioSource soundSource;
+
+    private void OnEnable()
+    {
+        _sound = (Sound)target;
+        EditorUtility.SetDirty(_sound);
+        if (soundGameObject == null)
+        {
+            soundGameObject = new GameObject
+            {
+                name = "Editor Sound Source Only"
+            };
+            soundSource = soundGameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    public override void OnInspectorGUI()
+    {
+        GUILayout.Label("Clip: ");
+        _sound.clip = (AudioClip)EditorGUILayout.ObjectField(_sound.clip, typeof(AudioClip), false);
+        GUILayout.Label("AudioType: ");
+        _sound.type = (Sound.PlayType)EditorGUILayout.EnumPopup(_sound.type);
+        GUILayout.Label("Volume: ");
+        _sound.volume = EditorGUILayout.Slider(_sound.volume, 0f, 1f);
+        GUILayout.Label("Volume Scale: ");
+        _sound.volumeScale = EditorGUILayout.Slider(_sound.volumeScale, 0f, 1f);
+        GUILayout.Label("Pitch: ");
+        _sound.pitch = EditorGUILayout.Slider(_sound.pitch, 0f, 2f);
+
+        soundSource.loop = (_sound.type != Sound.PlayType.Loop);
+        soundSource.clip = _sound.clip;
+        soundSource.volume = _sound.volume * _sound.volumeScale;
+        soundSource.pitch = _sound.pitch;
+
+        if(soundSource.clip == null){
+            repaint();
+            return;
+        }
+
+        if (soundSource.time >= soundSource.clip.length) soundSource.Stop();
+
+        EditorGUILayout.LabelField("");
+        EditorGUILayout.Slider(soundSource.time, 0f, soundSource.clip.length);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalScrollbar);
+        
+        if (!soundSource.isPlaying)
+        {
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Play!")
+            {
+                soundSource.Play();
+            }
+
+            if (GUILayout.Button("Resume"))
+            {
+                soundSource.UnPause();
+            }
+            GUILayout.EndHorizontal();
+        }else{
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Stop!")){
+                soundSource.Stop();
+            }
+
+            if (GUILayout.Button("Pause")){
+                soundSource.Pause();
+            }
+            GUILayout.EndHorizontal();
+        }
+        
+        Repaint();
+    }
+    private void OnDisable()
+    {
+        if (soundGameObject != null){
+            DestroyImmediate(soundGameObject);
+        }
+    }
+}
