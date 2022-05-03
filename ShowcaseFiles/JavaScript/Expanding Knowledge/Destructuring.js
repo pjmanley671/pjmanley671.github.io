@@ -1,8 +1,6 @@
 /* Various research functions */
 
-function ReturnFirstIndex(pArray = [])
-{ // Destructuring used to find the first index in an array.
-    if(pArray.length < 1) return -1;
-    const [value_first, ...value_rest] = pArray;
-    return pArray.findIndex(value_first);
+function ReturnFirstIndex(pArray = []){
+    const [value_first] = pArray;
+    return (typeof value_first === "undefined")? -1 : pArray.findIndex(value_first);
 }

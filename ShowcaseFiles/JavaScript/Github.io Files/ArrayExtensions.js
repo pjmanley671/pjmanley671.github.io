@@ -18,9 +18,8 @@ Array.prototype.lastElement = () =>{
 }
 
 Array.prototype.firstElement = function(){
-  let ele;
+  const [ele] = this;
   try{
-    [ele] = this;
     if(typeof ele == "undefined")
       throw Error("Failed to retrieve first element: ", this.Enumerator.caller);
   }catch (pE){

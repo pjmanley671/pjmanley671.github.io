@@ -8,36 +8,35 @@ var g_Commits = new Uint32Array(chart_months.length);
 
 function ResetMonths(){
 	const width = chart_svg.clientWidth;
-	let months, xOffset, xDist;
+	const xOffset = width / 50;
 
-	months = chart_svg.children[0];
-	xOffset	= width / 50;
-	xDist = width / months.children.length;
+	let [months] = chart_svg.children;
+	const xDist = width / months.children.length;
 
-	for(let i = months.children.length; i; i--) // used reverse loop since method can be called frequently on Resize
-		months.children[i-1].setAttribute("x", String((i-1) * xDist + xOffset));
+	for(let i = months.children.length - 1; i; i--)
+		months.children[i].setAttribute("x", String(i * xDist + xOffset));
 }
 
 function ScalePointsX(){
-	let points, xOffset;
+	let points;
 
 	points = chart_months.children;
-	xOffset= chart.clientWidth / 30
+	const xOffset = chart.clientWidth / 30;
 	
-	for(let p = points.length; p; p--) // used reverse loop since method can be called frequently on Resize
-		points[p-1].setAttribute("cx", String( (p-1) * chart.clientWidth / points.length + xOffset));
+	for(let p = points.length - 1; p; p--)
+		points[p].setAttribute("cx", String(p * chart.clientWidth / points.length + xOffset));
 }
 
 function SetPointY(){
-	let points, yDist
+	let points;
 
 	points = chart_months.children;
-	yDist = chart.clientHeight / GOAL;
+	const yDist = chart.clientHeight / GOAL;
 
-	for(let i = points.length; i; i--){ // used reverse loop since method can be called frequently on Resize
-		const height = chart.clientHeight - g_Commits[i-1] * yDist;
-		const isNotGoalHeight = Number(g_Commits[i - 1] < GOAL);
-		points[i-1].setAttribute("cy", String(isNotGoalHeight * height));
+	for(let i = points.length - 1; i; i--){
+		const height = chart.clientHeight - g_Commits[i] * yDist;
+		const isNotGoalHeight = Number(g_Commits[i] < GOAL);
+		points[i].setAttribute("cy", String(isNotGoalHeight * height));
 	}
 }
 
@@ -56,19 +55,17 @@ const LinesMap = {
 	},
 	"": (pLine, lineNumber)=>{
 		lineNumber++;
+		const lineHeight = chart.clientHeight - lineNumber * chart.clientHeight / GOAL;
 		pLine.setAttribute("x2", String(chart.clientWidth));
-		pLine.setAttribute(
-			"y1", String(chart.clientHeight - lineNumber * chart.clientHeight / GOAL));
-		pLine.setAttribute("y2", String(chart.clientHeight - lineNumber * chart.clientHeight / GOAL));
+		pLine.setAttribute("y1", String(lineHeight));
+		pLine.setAttribute("y2", String(lineHeight));
 		return lineNumber;
 	}
 };
 
 function ResetLines(){
-	let lineNumber, lines;
-
-	lineNumber = 0;
-	lines = chart.children[2].children;
+	let lineNumber = 0;
+	const lines = chart.children[2].children;
 	for(let line of lines) lineNumber = LinesMap[line.id](line, lineNumber);
 }
 
@@ -79,7 +76,7 @@ export function DrawChart(){
 	SetPointY();
 
 	githubmark.setAttribute( "x",
-		String(0.5 * chart.clientWidth - 0.75 
+		String(0.5 * chart.clientWidth - 0.75
 			* parseInt(githubmark.getAttribute("width"))));
 }
 
