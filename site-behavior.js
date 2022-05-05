@@ -27,11 +27,7 @@ async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
 		return (repo.size === 0)? false : repo_pushed_year == DATE_YEAR_CURRENT;
 
 	}).sort((a, b) => { // sort the new filtered array by most recent pushed_at date.
-
-		const a_pushed_date = Utils.convertTZ(a.pushed_at, TIMEZONE);
-		const b_pushed_date = Utils.convertTZ(b.pushed_at, TIMEZONE);
-
-		return (a_pushed_date < b_pushed_date) ? 1 : 0 - Number(a_pushed_date > b_pushed_date);
+		return (a.pushed_at < b.pushed_at) ? 1: (a.pushed_at > b.pushed_at)? -1: 0;
 	}); // end of repos_recent initialization
 
 	repos_recent.forEach((repo) => { // Genereate the table entries.
@@ -40,8 +36,7 @@ async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
 		);
 		let repo_button = Utils.GenerateLinkButton(repo.name, repo.html_url);
 		repo_button.addEventListener("click", event =>{
-			let exit_confirm = false;
-			exit_confirm = confirm("Page will exit to Github repository: "+ event.target.innerHTML +". Continue?");
+			const exit_confirm = confirm("Page will exit to Github repository: "+ event.target.innerHTML +". Continue?");
 			if(exit_confirm) window.open(event.target.value, "_self");
 		});
 		Utils.SendDataToTable(document.getElementById("table-details"), [repo_button, repo_pushed_date, 0])

@@ -13,8 +13,8 @@ function ResetMonths(){
 	let [months] = chart_svg.children;
 	const xDist = width / months.children.length;
 
-	for(let i = months.children.length - 1; i; i--)
-		months.children[i].setAttribute("x", String(i * xDist + xOffset));
+	for(let i = months.children.length; i; i--)
+		months.children[i-1].setAttribute("x", String((i-1) * xDist + xOffset));
 }
 
 function ScalePointsX(){
@@ -23,8 +23,8 @@ function ScalePointsX(){
 	points = chart_months.children;
 	const xOffset = chart.clientWidth / 30;
 	
-	for(let p = points.length - 1; p; p--)
-		points[p].setAttribute("cx", String(p * chart.clientWidth / points.length + xOffset));
+	for(let p = points.length; p; p--)
+		points[p-1].setAttribute("cx", String((p-1) * chart.clientWidth / points.length + xOffset));
 }
 
 function SetPointY(){
@@ -33,10 +33,10 @@ function SetPointY(){
 	points = chart_months.children;
 	const yDist = chart.clientHeight / GOAL;
 
-	for(let i = points.length - 1; i; i--){
-		const height = chart.clientHeight - g_Commits[i] * yDist;
-		const isNotGoalHeight = Number(g_Commits[i] < GOAL);
-		points[i].setAttribute("cy", String(isNotGoalHeight * height));
+	for(let i = points.length; i; i--){
+		const height = chart.clientHeight - g_Commits[i-1] * yDist;
+		const isNotGoalHeight = Number(g_Commits[i-1] < GOAL);
+		points[i-1].setAttribute("cy", String(isNotGoalHeight * height));
 	}
 }
 
@@ -75,12 +75,13 @@ export function DrawChart(){
 	ScalePointsX();
 	SetPointY();
 
-	githubmark.setAttribute( "x",
-		String(0.5 * chart.clientWidth - 0.75
-			* parseInt(githubmark.getAttribute("width"))));
+	const markWidth = parseInt(githubmark.getAttribute("width"));
+	const markXPlacement = 0.5 * chart.clientWidth - 0.75 * markWidth;
+
+	githubmark.setAttribute("x", String(markXPlacement));
 }
 
-const DateValue = (pDate) => {
+const DateValue = (pDate)=>{
 	let value = 0;
 	switch(pDate){
 		case "Jan": value = 1; break;
@@ -101,9 +102,8 @@ const DateValue = (pDate) => {
 }
 
 export function ReformatStringDate(pDate){
-	let lDate;
-	lDate = "" + DateValue(pDate.substring(0, 3));
+	const lDate = "" + DateValue(pDate.substring(0, 3));
 	return lDate.concat(pDate.substring(3, pDate.length));
 }
 
-export function UpdateCommitCount(pNums){ g_Commits = pNums;}
+export function UpdateCommitCount(pNums){ g_Commits = pNums; }
