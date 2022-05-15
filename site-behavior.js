@@ -19,7 +19,7 @@ async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
 		return;
 	}
 
-	const user_repos = await(user_fetch.json())
+	const user_repos = await(user_fetch.json());
 
 	const repos_recent = user_repos.filter(repo =>{ // Remove entries not updated this year.
 
@@ -73,7 +73,7 @@ async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
 		// Update the table entry for this repo
 		let repo_row = table_details[i + 1];
 		repo_row.children[2].innerHTML = commits_filtered.length;
-		commits_filtered.forEach(cmt => commits_all.push(cmt));
+		commits_filtered.forEach(cmt => {commits_all.push(cmt);});
 	}
 
 	let commit_count
@@ -111,7 +111,7 @@ function GenerateHeaderButtons(){
 		nav_button = Utils.GenerateLinkButton(navLink.Name, navLink.Link)
 		nav_button.className = navLink.Confirmation.message_format
 
-		HeaderButtonsMap[(nav_button.className == "Navbar-link")? 1 : 0](nav_button); // buttons behavior only changes when it remains on site or leaves.
+		HeaderButtonsMap[(nav_button.className == "Navbar-link")? 1 : 0](nav_button);
 	});
 	document.getElementById("Home-button").click(); // click the main page.
 }
@@ -133,8 +133,8 @@ const CreateExampleDropdownTable=() => {
 	let table = document.getElementById("Showcase-Table");
 
 	while(Showcase.TableDetails.length){ // Populate the table.
-		let [fileType, fileName, fileGroup] = Showcase.TableDetails;
-		Showcase.TableDetails.shiftN(3);	
+		const [fileType, fileName, fileGroup] = Showcase.TableDetails;
+		Showcase.TableDetails.shiftN(3);
 		Utils.SendDataToTable(table, [fileType, fileName, fileGroup]);
 	}
 
@@ -146,9 +146,10 @@ const CreateExampleDropdownTable=() => {
 			let code_output = document.getElementById("code-output");
 			let output_directory = "./ShowcaseFiles";
 	
-			output_directory = output_directory.concat( "/", thisRow.children[0].innerHTML.toString());
-			output_directory = output_directory.concat( "/", thisRow.children[2].innerHTML.toString());
-			output_directory = output_directory.concat( "/", thisRow.children[1].innerHTML.toString());
+			output_directory = output_directory.concat(
+				'/', thisRow.children[0].innerHTML.toString(),
+				'/', thisRow.children[2].innerHTML.toString(),
+				'/', thisRow.children[1].innerHTML.toString());
 	
 			if(code_output.children.length > 0) code_output.removeChild(code_output.children[0]);
 	
@@ -164,7 +165,6 @@ const CreateExampleDropdownTable=() => {
 
 function PageLoad(){
 	let init_commits = new Uint32Array(document.getElementById("CircleGroup").children.length);
-	for(let index in init_commits) index = 0;
 	UpdateCommitCount(init_commits);
 
 	GenerateHeaderButtons()
@@ -181,6 +181,3 @@ function PageLoad(){
 
 window.onload = PageLoad
 window.onresize = Resize
-
-//https://stackoverflow.com/questions/2117046/how-to-show-live-preview-in-a-small-popup-of-linked-page-on-mouse-over-on-link
-//https://stackoverflow.com/questions/6042007/how-to-get-the-host-url-using-javascript-from-the-current-page
