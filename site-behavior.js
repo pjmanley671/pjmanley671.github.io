@@ -11,7 +11,7 @@ const DATE_YEAR_CURRENT = (new Date()).getFullYear()
 async function GetAndHandleRepos(p_Url){ // Updates only on PageLoad
 	const doc_url = document.URL;
 	const user_fetch = await(fetch(p_Url));
-	if(user_fetch.ok != true){
+	if(!user_fetch.ok){
 		let git_table_row = document.getElementById("table-details");
 		let error_column = document.createElement("td");
 		error_column.innerHTML = "Error fetching from " + p_Url;
@@ -95,7 +95,7 @@ const HeaderButtonsMap = [
 		});
 		document.getElementById("dropdown-content").appendChild(p_button);
 	},
-	(p_button= Node) => { // Index 1 for this site navigation.
+	(p_button = Node) => { // Index 1 for this site navigation.
 		p_button.addEventListener("click", event=>{
 			Utils.OpenPage(event.target, "black");
 			activePage = event.target.innerHTML;
